@@ -4,77 +4,77 @@ xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitem
 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
-<loc>/</loc>
-<lastmod>2017-06-12T15:26:51-00:00</lastmod>
+<loc>http://suhasghorp.github.io/</loc>
+<lastmod>2017-06-12T15:54:12-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/archives.html</loc>
-<lastmod>2017-06-12T15:26:51-00:00</lastmod>
+<loc>http://suhasghorp.github.io/archives.html</loc>
+<lastmod>2017-06-12T15:54:12-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tags.html</loc>
-<lastmod>2017-06-12T15:26:51-00:00</lastmod>
+<loc>http://suhasghorp.github.io/tags.html</loc>
+<lastmod>2017-06-12T15:54:12-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/categories.html</loc>
-<lastmod>2017-06-12T15:26:51-00:00</lastmod>
+<loc>http://suhasghorp.github.io/categories.html</loc>
+<lastmod>2017-06-12T15:54:12-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/about/</loc>
+<loc>http://suhasghorp.github.io/about/</loc>
 <lastmod>2017-06-11T16:20:51-04:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/options_and_volatility_smile/</loc>
+<loc>http://suhasghorp.github.io/options_and_volatility_smile/</loc>
 <lastmod>2017-06-11T16:21:00-04:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/category/quantfin.html</loc>
+<loc>http://suhasghorp.github.io/category/quantfin.html</loc>
 <lastmod>2017-06-11T16:21:00-04:56</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/test.html</loc>
+<loc>http://suhasghorp.github.io/tag/test.html</loc>
 <lastmod>2017-06-11T16:21:00-04:56</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/pelican.html</loc>
+<loc>http://suhasghorp.github.io/tag/pelican.html</loc>
 <lastmod>2017-06-11T16:21:00-04:56</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/blogging.html</loc>
+<loc>http://suhasghorp.github.io/tag/blogging.html</loc>
 <lastmod>2017-06-11T16:21:00-04:56</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/author/suhas-ghorpadkar.html</loc>
+<loc>http://suhasghorp.github.io/author/suhas-ghorpadkar.html</loc>
 <lastmod>2017-06-11T16:21:00-04:56</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
