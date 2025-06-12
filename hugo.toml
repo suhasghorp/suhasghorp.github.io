@@ -1,0 +1,13 @@
+baseURL = 'https://suhasghorp.github.io/'
+languageCode = 'en-us'
+title = '<quantexpr>'
+theme = 'hugo-kiera'
+canonifyurls = true
+
+[pagination]
+  pagersize = 3
+  path = 'page'
+
+summaryLength = 10
+enableEmoji = true
+pygmentsCodeFences = true

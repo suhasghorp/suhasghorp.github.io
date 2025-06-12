@@ -1,0 +1,42 @@
+
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+ <channel>
+   <title>&lt;quantexpr&gt;</title>
+   <link>http://localhost:1313/</link>
+   <description>Recent content on &lt;quantexpr&gt;</description>
+   <generator>Hugo -- gohugo.io</generator>
+   <language>en-us</language>
+   <lastBuildDate>Thu, 12 Jun 2025 13:59:32 -0400</lastBuildDate>
+   
+       <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+   
+   
+     <item>
+       <title>Git</title>
+       <link>http://localhost:1313/posts/git/</link>
+       <pubDate>Thu, 12 Jun 2025 13:59:32 -0400</pubDate>
+       
+       <guid>http://localhost:1313/posts/git/</guid>
+       <description>&lt;h1 id=&#34;summary-of-git-version-control&#34;&gt;Summary of Git Version Control&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;Git&lt;/strong&gt; is a distributed version control system used to track changes in source code during software development. It helps teams collaborate, manage code history, and coordinate work efficiently.&lt;/p&gt;&lt;h2 id=&#34;key-features&#34;&gt;Key Features&lt;/h2&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Distributed System&lt;/strong&gt;: Each developer has a complete local copy of the repository.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Branching and Merging&lt;/strong&gt;: Create branches for new features or fixes, then merge them into the main codebase.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Commit History&lt;/strong&gt;: Track changes over time with messages explaining what was done and why.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Collaboration&lt;/strong&gt;: Multiple developers can work simultaneously and merge their changes.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Staging Area&lt;/strong&gt;: Select specific changes to commit using the staging index.&lt;/li&gt;&lt;/ul&gt;&lt;h2 id=&#34;basic-git-commands&#34;&gt;Basic Git Commands&lt;/h2&gt;&lt;ul&gt;&lt;li&gt;&lt;code&gt;git init&lt;/code&gt; – Initialize a new Git repository&lt;/li&gt;&lt;li&gt;&lt;code&gt;git clone &amp;lt;repo&amp;gt;&lt;/code&gt; – Clone a remote repository&lt;/li&gt;&lt;li&gt;&lt;code&gt;git status&lt;/code&gt; – Show the status of changes&lt;/li&gt;&lt;li&gt;&lt;code&gt;git add &amp;lt;file&amp;gt;&lt;/code&gt; – Stage changes for commit&lt;/li&gt;&lt;li&gt;&lt;code&gt;git commit -m &amp;quot;message&amp;quot;&lt;/code&gt; – Commit staged changes&lt;/li&gt;&lt;li&gt;&lt;code&gt;git pull&lt;/code&gt; – Fetch and merge changes from a remote repository&lt;/li&gt;&lt;li&gt;&lt;code&gt;git push&lt;/code&gt; – Upload local commits to a remote repository&lt;/li&gt;&lt;li&gt;&lt;code&gt;git branch&lt;/code&gt; – List or create branches&lt;/li&gt;&lt;li&gt;&lt;code&gt;git merge &amp;lt;branch&amp;gt;&lt;/code&gt; – Merge a branch into the current one&lt;/li&gt;&lt;/ul&gt;&lt;hr&gt;&lt;p&gt;Git is essential for modern software development, enabling better collaboration, version tracking, and project organization.&lt;/p&gt;</description>
+     </item>
+   
+     <item>
+       <title>Aws</title>
+       <link>http://localhost:1313/posts/aws/</link>
+       <pubDate>Thu, 12 Jun 2025 13:56:19 -0400</pubDate>
+       
+       <guid>http://localhost:1313/posts/aws/</guid>
+       <description>&lt;h1 id=&#34;summary-of-aws-services&#34;&gt;Summary of AWS Services&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;AWS (Amazon Web Services)&lt;/strong&gt; is a comprehensive cloud computing platform offering a wide range of services to help businesses scale and grow. Below is a brief summary of its key service categories:&lt;/p&gt;&lt;h2 id=&#34;1-compute&#34;&gt;1. Compute&lt;/h2&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Amazon EC2&lt;/strong&gt;: Virtual servers in the cloud.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;AWS Lambda&lt;/strong&gt;: Serverless computing to run code without managing servers.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Elastic Beanstalk&lt;/strong&gt;: Deploy and manage applications quickly.&lt;/li&gt;&lt;/ul&gt;&lt;h2 id=&#34;2-storage&#34;&gt;2. Storage&lt;/h2&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Amazon S3&lt;/strong&gt;: Scalable object storage for data backup and archiving.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;EBS &amp;amp; EFS&lt;/strong&gt;: Block and file storage for use with EC2 instances.&lt;/li&gt;&lt;/ul&gt;&lt;h2 id=&#34;3-database&#34;&gt;3. Database&lt;/h2&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Amazon RDS&lt;/strong&gt;: Managed relational databases (e.g., MySQL, PostgreSQL).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;DynamoDB&lt;/strong&gt;: NoSQL database with high performance.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Redshift&lt;/strong&gt;: Data warehousing and analytics.&lt;/li&gt;&lt;/ul&gt;&lt;h2 id=&#34;4-networking&#34;&gt;4. Networking&lt;/h2&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;VPC (Virtual Private Cloud)&lt;/strong&gt;: Isolated cloud resources.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Route 53&lt;/strong&gt;: Scalable DNS and domain name management.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;CloudFront&lt;/strong&gt;: Global content delivery network (CDN).&lt;/li&gt;&lt;/ul&gt;&lt;h2 id=&#34;5-security--identity&#34;&gt;5. Security &amp;amp; Identity&lt;/h2&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;IAM (Identity and Access Management)&lt;/strong&gt;: User access control.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;KMS (Key Management Service)&lt;/strong&gt;: Encryption key management.&lt;/li&gt;&lt;/ul&gt;&lt;h2 id=&#34;6-machine-learning--ai&#34;&gt;6. Machine Learning &amp;amp; AI&lt;/h2&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;SageMaker&lt;/strong&gt;: Build, train, and deploy machine learning models.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Rekognition, Comprehend, Lex&lt;/strong&gt;: Image analysis, NLP, and chatbot tools.&lt;/li&gt;&lt;/ul&gt;&lt;h2 id=&#34;7-developer-tools&#34;&gt;7. Developer Tools&lt;/h2&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;CodeBuild, CodeDeploy, CodePipeline&lt;/strong&gt;: Continuous integration and delivery.&lt;/li&gt;&lt;/ul&gt;&lt;h2 id=&#34;8-monitoring--management&#34;&gt;8. Monitoring &amp;amp; Management&lt;/h2&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;CloudWatch&lt;/strong&gt;: Monitoring of AWS resources.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;CloudTrail&lt;/strong&gt;: Logging and auditing API activity.&lt;/li&gt;&lt;/ul&gt;&lt;hr&gt;&lt;p&gt;AWS services are designed to be flexible, scalable, and cost-effective, suitable for everything from startups to large enterprises.&lt;/p&gt;</description>
+     </item>
+   
+     <item>
+       <title>Hello World</title>
+       <link>http://localhost:1313/posts/hello-world/</link>
+       <pubDate>Thu, 12 Jun 2025 13:51:19 -0400</pubDate>
+       
+       <guid>http://localhost:1313/posts/hello-world/</guid>
+       <description>&lt;h1 id=&#34;hello-world&#34;&gt;Hello World&lt;/h1&gt;&lt;h2 id=&#34;this-is-2nd-level-text-and-italics&#34;&gt;this is 2nd level &lt;strong&gt;text&lt;/strong&gt; and &lt;em&gt;italics&lt;/em&gt;&lt;/h2&gt;&lt;h3 id=&#34;this-is-3rd-level&#34;&gt;this is 3rd level&lt;/h3&gt;</description>
+     </item>
+   
+ </channel>
+</rss>
