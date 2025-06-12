@@ -1,6 +1,6 @@
 baseURL = 'https://suhasghorp.github.io/'
 languageCode = 'en-us'
-title = '&lt;quantexpr&gt;'
+title = 'quantexpr'
 theme = 'hugo-kiera'
 canonifyurls = true
 
