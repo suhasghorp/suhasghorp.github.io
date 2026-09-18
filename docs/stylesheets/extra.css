@@ -1,0 +1,37 @@
+/* Two admonitions the series uses in every article. */
+:root {
+  --md-admonition-icon--formula: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 2h10v2H9.5l4 8-4 8H17v2H7v-1.5L11.3 12 7 3.5z"/></svg>');
+  --md-admonition-icon--realdesk: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 4h16v10H4zm2 2v6h12V6zM2 18h20v2H2z"/></svg>');
+}
+
+/* 📐 Formula: the maths behind an idea, which a reader can skip. */
+.md-typeset .admonition.formula,
+.md-typeset details.formula {
+  border-color: rgb(94, 53, 177);
+}
+.md-typeset .formula > .admonition-title,
+.md-typeset .formula > summary {
+  background-color: rgba(94, 53, 177, 0.1);
+}
+.md-typeset .formula > .admonition-title::before,
+.md-typeset .formula > summary::before {
+  background-color: rgb(94, 53, 177);
+  -webkit-mask-image: var(--md-admonition-icon--formula);
+          mask-image: var(--md-admonition-icon--formula);
+}
+
+/* What a real desk does differently. */
+.md-typeset .admonition.realdesk,
+.md-typeset details.realdesk {
+  border-color: rgb(0, 121, 107);
+}
+.md-typeset .realdesk > .admonition-title,
+.md-typeset .realdesk > summary {
+  background-color: rgba(0, 121, 107, 0.1);
+}
+.md-typeset .realdesk > .admonition-title::before,
+.md-typeset .realdesk > summary::before {
+  background-color: rgb(0, 121, 107);
+  -webkit-mask-image: var(--md-admonition-icon--realdesk);
+          mask-image: var(--md-admonition-icon--realdesk);
+}

@@ -1,0 +1,87 @@
+site_name: Building a Fixed Income Risk Engine
+site_description: How real-time risk works, and a working engine to prove it.
+site_url: https://suhasghorp.github.io/
+repo_url: https://github.com/suhasghorp/fixed-income-risk-engine
+repo_name: fixed-income-risk-engine
+edit_uri: ""
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.footer
+    - navigation.top
+    - content.code.copy
+    - content.code.annotate
+    - content.tooltips
+    - toc.follow
+
+not_in_nav: |
+  /articles/_template.md
+
+nav:
+  - Home: index.md
+  - Articles:
+      - "1. What a risk system is for": articles/01-what-a-risk-system-is-for.md
+      - "2. The yield curve": articles/02-the-yield-curve.md
+      - "3. Moving the curve through time": articles/03-moving-the-curve-through-time.md
+      - "4. Pricing a bond and measuring its risk": articles/04-pricing-a-bond-and-measuring-its-risk.md
+      - "5. Real-time risk without recomputing everything": articles/05-real-time-risk-without-recomputing-everything.md
+      - "6. Treasury futures": articles/06-treasury-futures.md
+      - "7. Credit and the missing tape": articles/07-credit-and-the-missing-tape.md
+      - "8. When credit breaks": articles/08-when-credit-breaks.md
+      - "9. Interest rate swaps": articles/09-interest-rate-swaps.md
+      - "10. Correlation": articles/10-correlation.md
+      - "11. The runtime": articles/11-the-runtime.md
+  - Glossary: glossary.md
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets:
+      auto_append:
+        - includes/abbreviations.md
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra_css:
+  - https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/katex.js
+  - https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js
+  - https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js

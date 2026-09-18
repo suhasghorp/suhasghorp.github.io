@@ -1,0 +1,18 @@
+# Newcomer-friendly notes shown under a glossary definition on the site only (never in CONTEXT.md).
+# Keys must match CONTEXT.md terms exactly; scripts/glossary.py fails on unknown keys.
+DV01: >-
+  How many dollars a Position gains if interest rates fall by one hundredth of a percent. The bigger
+  the number, the more rate risk.
+Bucketed DV01: >-
+  DV01 split up by maturity, so you can see whether the rate risk sits in the 2-year, 10-year or 30-year
+  part of the curve.
+CS01: >-
+  Like DV01, but for credit spreads: how many dollars a Position gains if its issuer's spread tightens by
+  one hundredth of a percent.
+Mark: >-
+  The spread the risk system believes an issuer trades at right now, pieced together from the few trades
+  and quotes it has seen.
+Staleness: >-
+  How out of date a displayed price is allowed to get before the engine bothers to reprice it.
+Tick: >-
+  One heartbeat of the simulated market.
