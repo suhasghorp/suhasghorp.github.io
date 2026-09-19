@@ -475,9 +475,17 @@ cd frontend && npm install && npm run dev
     Out to 10 years, compounding wins. At 20 and 30 years, slope wins.
 - **The Pillar row** gives the zero rate at each Pillar:
 
-| Pillar | 3M | 1Y | 2Y | 3Y | 5Y | 7Y | 10Y | 20Y | 30Y |
-|---|---|---|---|---|---|---|---|---|---|
-| Zero rate (%) | 4.049 | 4.306 | 4.585 | 4.644 | 4.736 | 4.833 | 4.933 | 5.478 | 5.359 |
+| Pillar | Zero rate (%) |
+|---|---|
+| 3M | 4.049 |
+| 1Y | 4.306 |
+| 2Y | 4.585 |
+| 3Y | 4.644 |
+| 5Y | 4.736 |
+| 7Y | 4.833 |
+| 10Y | 4.933 |
+| 20Y | 5.478 |
+| 30Y | 5.359 |
 
 The 1Y value, 4.306%, is the one worked out by hand earlier.
 
