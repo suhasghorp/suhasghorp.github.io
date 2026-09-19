@@ -133,7 +133,7 @@ one input moves by a small, fixed amount, with everything else held still.
 The most important sensitivity in fixed income is [DV01](glossary.md#dv01), the "dollar value of a
 basis point". It is the change in value when interest rates move by one basis point (0.01%). A long bond
 loses value when rates rise, so a desk long 10 million of a two-year note has a DV01 of roughly
-$1,900: every basis point up in rates costs about that much. Article 4 covers DV01 and its more useful
+\$1,900: every basis point up in rates costs about that much. Article 4 covers DV01 and its more useful
 cousin, [Bucketed DV01](glossary.md#bucketed-dv01), which splits the exposure across points on the
 curve. Article 7 covers [CS01](glossary.md#cs01), the same idea for credit spreads.
 
@@ -306,19 +306,19 @@ reported: 4.019% at 3 months, 4.906% at 10 years, 5.341% at 30 years. Article 2 
 
 **③ Book risk.** The two headline numbers:
 
-- **Book DV01 +20,703.** If the whole zero curve falls one basis point, the Book gains about $20,703. If
+- **Book DV01 +20,703.** If the whole zero curve falls one basis point, the Book gains about \$20,703. If
   it rises, the Book loses about that much.
 - **Book CS01 +6,196.** The same for a one-basis-point fall in every corporate issuer's spread.
 
-The table below splits the Book by Instrument type. The eight Treasury Positions are worth $20,179,699
+The table below splits the Book by Instrument type. The eight Treasury Positions are worth \$20,179,699
 and carry DV01 +14,482. The two futures are worth zero but carry DV01 −2,113. The bar chart splits DV01
 across the Pillars. The Book is heavily exposed at 10 years (+16,714) and short at 5 years (−6,010), so a
 steepening of the curve and a parallel shift affect it very differently. Article 4 explains Bucketed DV01.
 
 **④ The Book.** One row per Position: its Instrument, signed quantity, clean price, accrued interest,
 dirty value, DV01, CS01, and the Tick it was last priced. Short Positions show in red. P03 is short
-7.5 million of the 5-year note, worth −$7,385,053 with DV01 −3,329. P09 is short 6 million of the ZN
-future: value 0, DV01 −3,876. The Book total is **$32,826,883**.
+7.5 million of the 5-year note, worth −\$7,385,053 with DV01 −3,329. P09 is short 6 million of the ZN
+future: value 0, DV01 −3,876. The Book total is **\$32,826,883**.
 
 The last column is the one this series is about. At Tick 30:
 

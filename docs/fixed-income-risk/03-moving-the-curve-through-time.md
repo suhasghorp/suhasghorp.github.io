@@ -402,7 +402,7 @@ $0.994 \times 1.07 = 1.06$bp and $0.518 \times 1.07 = 0.55$bp.
 
 **The first Lifecycle Event.** Nothing is paid until Tick 480, the Day Rollover into 1 October 2026. That
 day Boreal Manufacturing's 5.10% bond pays its semi-annual coupon, 2.55 per 100 of face. Position P13
-holds 4 million face, so it receives $102,000:
+holds 4 million face, so it receives \$102,000:
 
 ![The header at Tick 480: Valuation Date 2026-10-01](img/03-tick480-header.png)
 ![The Lifecycle Events panel at Tick 480: a 102,000 coupon on Position P13](img/03-tick480-lifecycle.png)
