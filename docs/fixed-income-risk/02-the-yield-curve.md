@@ -527,8 +527,7 @@ Primary sources:
   Questions*](https://home.treasury.gov/policy-issues/financing-the-government/interest-rate-statistics/interest-rates-frequently-asked-questions).
   What a par yield (CMT) is, and why there is no published zero curve.
 - US Treasury, [*Yield Curve Methodology Change Information
-  Sheet*](https://home.treasury.gov/policy-issues/financing-the-government/yield-curve-methodology-change-information-sheet),
-  2021. The move from quasi-cubic Hermite spline to monotone convex.
+  Sheet*](https://home.treasury.gov/policy-issues/financing-the-government/yield-curve-methodology-change-information-sheet), 2021. The move from quasi-cubic Hermite spline to monotone convex.
 - US Treasury, [*Interest Rate
   Statistics*](https://home.treasury.gov/policy-issues/financing-the-government/interest-rate-statistics).
   The daily par yield curve rates, which the engine downloads as CSV.
@@ -545,8 +544,7 @@ Primary sources:
 
 Textbooks:
 
-- Bruce Tuckman and Angel Serrat, *Fixed Income Securities: Tools for Today's Markets*, 4th ed., Wiley,
-  2022. Discount factors, par and zero rates, forwards and bootstrapping.
+- Bruce Tuckman and Angel Serrat, *Fixed Income Securities: Tools for Today's Markets*, 4th ed., Wiley, 2022. Discount factors, par and zero rates, forwards and bootstrapping.
 - Leif B. G. Andersen and Vladimir V. Piterbarg, *Interest Rate Modeling*, Vol. 1, Atlantic Financial
   Press, 2010. Curve construction in depth, including splines, locality and multi-curve.
 

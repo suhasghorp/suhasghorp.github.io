@@ -391,8 +391,7 @@ Primary sources:
   risk*](https://www.bis.org/bcbs/publ/d457.pdf) (FRTB, d457), January 2019. The trading desk,
   independent risk control, and desk-level P&L tests.
 - US Securities and Exchange Commission, [*Market Data
-  Infrastructure*](https://www.sec.gov/files/rules/final/2020/34-90610.pdf), Release 34-90610, December
-  2020. How the equity consolidated tape works.
+  Infrastructure*](https://www.sec.gov/files/rules/final/2020/34-90610.pdf), Release 34-90610, December 2020. How the equity consolidated tape works.
 - H. Bessembinder, C. Spatt and K. Venkataraman, [*A Survey of the Microstructure of Fixed-Income
   Markets*](https://www.sec.gov/spotlight/fixed-income-advisory-committee/survey-of-microstructure-of-fixed-income-market.pdf),
   Journal of Financial and Quantitative Analysis 55(1), 2020. The best single overview of how bond
@@ -406,8 +405,7 @@ Primary sources:
 
 Textbooks:
 
-- Bruce Tuckman and Angel Serrat, *Fixed Income Securities: Tools for Today's Markets*, 4th ed., Wiley,
-  2022. The standard practitioner introduction to the markets, prices, curves and DV01.
+- Bruce Tuckman and Angel Serrat, *Fixed Income Securities: Tools for Today's Markets*, 4th ed., Wiley, 2022. The standard practitioner introduction to the markets, prices, curves and DV01.
 - John C. Hull, *Risk Management and Financial Institutions*, 6th ed., Wiley, 2023. How banks organise
   trading-desk risk, and the Basel market risk framework.
 

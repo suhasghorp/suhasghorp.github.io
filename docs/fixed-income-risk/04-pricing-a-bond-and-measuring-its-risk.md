@@ -447,8 +447,7 @@ Primary sources:
 
 Textbooks:
 
-- Bruce Tuckman and Angel Serrat, *Fixed Income Securities: Tools for Today's Markets*, 4th ed., Wiley,
-  2022. DV01, duration, convexity, and partial '01s. The closest textbook to this article.
+- Bruce Tuckman and Angel Serrat, *Fixed Income Securities: Tools for Today's Markets*, 4th ed., Wiley, 2022. DV01, duration, convexity, and partial '01s. The closest textbook to this article.
 - Frank J. Fabozzi (ed.), *The Handbook of Fixed Income Securities*, 9th ed., McGraw-Hill, 2021. Bond
   pricing, accrued interest and key rate durations.
 - Jan Mayle, *Standard Securities Calculation Methods*, Vol. 1, 3rd ed., SIA (now SIFMA), 1993. The
