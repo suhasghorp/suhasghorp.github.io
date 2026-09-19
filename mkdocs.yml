@@ -32,22 +32,22 @@ theme:
     - toc.follow
 
 not_in_nav: |
-  /articles/_template.md
+  /fixed-income-risk/_template.md
 
 nav:
   - Home: index.md
   - Articles:
-      - "1. What a risk system is for": articles/01-what-a-risk-system-is-for.md
-      - "2. The yield curve": articles/02-the-yield-curve.md
-      - "3. Moving the curve through time": articles/03-moving-the-curve-through-time.md
-      - "4. Pricing a bond and measuring its risk": articles/04-pricing-a-bond-and-measuring-its-risk.md
-      - "5. Real-time risk without recomputing everything": articles/05-real-time-risk-without-recomputing-everything.md
-      - "6. Treasury futures": articles/06-treasury-futures.md
-      - "7. Credit and the missing tape": articles/07-credit-and-the-missing-tape.md
-      - "8. When credit breaks": articles/08-when-credit-breaks.md
-      - "9. Interest rate swaps": articles/09-interest-rate-swaps.md
-      - "10. Correlation": articles/10-correlation.md
-      - "11. The runtime": articles/11-the-runtime.md
+      - "1. What a risk system is for": fixed-income-risk/01-what-a-risk-system-is-for.md
+      - "2. The yield curve": fixed-income-risk/02-the-yield-curve.md
+      - "3. Moving the curve through time": fixed-income-risk/03-moving-the-curve-through-time.md
+      - "4. Pricing a bond and measuring its risk": fixed-income-risk/04-pricing-a-bond-and-measuring-its-risk.md
+      - "5. Real-time risk without recomputing everything": fixed-income-risk/05-real-time-risk-without-recomputing-everything.md
+      - "6. Treasury futures": fixed-income-risk/06-treasury-futures.md
+      - "7. Credit and the missing tape": fixed-income-risk/07-credit-and-the-missing-tape.md
+      - "8. When credit breaks": fixed-income-risk/08-when-credit-breaks.md
+      - "9. Interest rate swaps": fixed-income-risk/09-interest-rate-swaps.md
+      - "10. Correlation": fixed-income-risk/10-correlation.md
+      - "11. The runtime": fixed-income-risk/11-the-runtime.md
   - Glossary: glossary.md
 
 markdown_extensions:

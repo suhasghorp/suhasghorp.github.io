@@ -13,17 +13,17 @@ moves, streaming risk to a browser.
 
 ## Reading order
 
-1. [What a risk system is for](articles/01-what-a-risk-system-is-for.md): What a fixed income desk holds, why it needs continuous risk, and a tour of the running engine.
-2. [The yield curve](articles/02-the-yield-curve.md): From published par yields to zero rates and discount factors: building today's real Treasury curve.
-3. [Moving the curve through time](articles/03-moving-the-curve-through-time.md): Hull-White, simulated time, and why the Valuation Date moves only at Day Rollover.
-4. [Pricing a bond and measuring its risk](articles/04-pricing-a-bond-and-measuring-its-risk.md): Clean and dirty prices, DV01, Bucketed DV01, and rolling risk up across a Book.
-5. [Real-time risk without recomputing everything](articles/05-real-time-risk-without-recomputing-everything.md): Risk Factors, Dependencies, Materiality Thresholds and Staleness: the central engineering problem.
-6. [Treasury futures](articles/06-treasury-futures.md): The cheapest-to-deliver, conversion factors, the Basis, and why a future carries risk but no value.
-7. [Credit and the missing tape](articles/07-credit-and-the-missing-tape.md): Spreads, Latent Spreads vs Marks, Prints and Quotes, Matrix Pricing and CS01.
-8. [When credit breaks](articles/08-when-credit-breaks.md): Credit Events, Rating Migrations, and Dependencies that change while the engine runs.
-9. [Interest rate swaps](articles/09-interest-rate-swaps.md): Fixed vs floating, Fixings, the par trick, and single-curve vs OIS.
-10. [Correlation](articles/10-correlation.md): Flight to quality, and generating correlated shocks with a Cholesky factor.
-11. [The runtime](articles/11-the-runtime.md): Threads, a latest-wins hand-off, coalescing, a worker pool, and streaming risk to the browser.
+1. [What a risk system is for](fixed-income-risk/01-what-a-risk-system-is-for.md): What a fixed income desk holds, why it needs continuous risk, and a tour of the running engine.
+2. [The yield curve](fixed-income-risk/02-the-yield-curve.md): From published par yields to zero rates and discount factors: building today's real Treasury curve.
+3. [Moving the curve through time](fixed-income-risk/03-moving-the-curve-through-time.md): Hull-White, simulated time, and why the Valuation Date moves only at Day Rollover.
+4. [Pricing a bond and measuring its risk](fixed-income-risk/04-pricing-a-bond-and-measuring-its-risk.md): Clean and dirty prices, DV01, Bucketed DV01, and rolling risk up across a Book.
+5. [Real-time risk without recomputing everything](fixed-income-risk/05-real-time-risk-without-recomputing-everything.md): Risk Factors, Dependencies, Materiality Thresholds and Staleness: the central engineering problem.
+6. [Treasury futures](fixed-income-risk/06-treasury-futures.md): The cheapest-to-deliver, conversion factors, the Basis, and why a future carries risk but no value.
+7. [Credit and the missing tape](fixed-income-risk/07-credit-and-the-missing-tape.md): Spreads, Latent Spreads vs Marks, Prints and Quotes, Matrix Pricing and CS01.
+8. [When credit breaks](fixed-income-risk/08-when-credit-breaks.md): Credit Events, Rating Migrations, and Dependencies that change while the engine runs.
+9. [Interest rate swaps](fixed-income-risk/09-interest-rate-swaps.md): Fixed vs floating, Fixings, the par trick, and single-curve vs OIS.
+10. [Correlation](fixed-income-risk/10-correlation.md): Flight to quality, and generating correlated shocks with a Cholesky factor.
+11. [The runtime](fixed-income-risk/11-the-runtime.md): Threads, a latest-wins hand-off, coalescing, a worker pool, and streaming risk to the browser.
 
 Each article stands alone, and every term links to the [glossary](glossary.md).
 

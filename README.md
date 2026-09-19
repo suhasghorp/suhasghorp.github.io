@@ -14,6 +14,6 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/mkdocs build --strict
 ```
 
-- `docs/articles/_template.md`: the skeleton every article follows (built, not in the navigation).
+- `docs/fixed-income-risk/_template.md`: the skeleton every article follows (built, not in the navigation).
 - `docs/glossary.md` and `includes/abbreviations.md`: generated from the engine's glossary by
   `scripts/glossary.py`.
