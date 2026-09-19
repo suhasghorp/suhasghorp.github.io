@@ -1,7 +1,7 @@
 """Generate the site's glossary from the engine's CONTEXT.md, the single source of truth for every term.
 
 Writes:
-  docs/glossary.md          one section per group, one anchored heading per term
+  docs/fixed-income-risk/glossary.md          one section per group, one anchored heading per term
   includes/abbreviations.md hover tooltips for each term (and its plural), appended to every page
 
 "In plain words" notes for newcomers live in data/plain-words.yml, keyed by term, and are merged in, so
@@ -88,7 +88,7 @@ def main() -> None:
     if unknown:
         sys.exit(f"data/plain-words.yml has notes for terms not in CONTEXT.md: {unknown}")
 
-    (ROOT / "docs" / "glossary.md").write_text("\n".join(page).rstrip() + "\n", encoding="utf-8")
+    (ROOT / "docs" / "fixed-income-risk" / "glossary.md").write_text("\n".join(page).rstrip() + "\n", encoding="utf-8")
     (ROOT / "includes" / "abbreviations.md").write_text("\n".join(abbreviations) + "\n", encoding="utf-8")
     print(f"{len(known)} terms in {len(groups)} groups")
 

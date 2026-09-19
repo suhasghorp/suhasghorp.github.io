@@ -58,7 +58,7 @@ So a fixed income desk cannot price its holdings by looking them up. It *derives
 curve from a handful of liquid benchmark instruments. It prices every other bond from that curve plus a
 credit spread. It estimates the spread of a bond that has not traded from the ones that have. Each price
 the desk uses is the output of a model, fed by whatever observations are available. In the engine, the
-price of a corporate bond comes from a [Mark](../glossary.md#mark): the engine's best estimate of the
+price of a corporate bond comes from a [Mark](glossary.md#mark): the engine's best estimate of the
 issuer's spread, reset whenever a trade report or dealer quote arrives, and carried forward in between.
 Articles 2, 7 and 8 cover how those prices are built.
 
@@ -66,7 +66,7 @@ Articles 2, 7 and 8 cover how those prices are built.
 
 If every price comes from a model, then what actually moves is the model's inputs: the curve, credit
 spreads, the gap between a future and its deliverable bond. The engine calls each of these a
-[Risk Factor](../glossary.md#risk-factor).
+[Risk Factor](glossary.md#risk-factor).
 
 Risk Factors are not independent. A corporate bond's spread is partly the market's view of credit in
 general, partly its sector's, and partly the issuer's own. Rates and spreads also tend to move together.
@@ -77,14 +77,14 @@ independent would get both the hedges and the stress scenarios wrong. Articles 3
 
 ### 3. The whole Book cannot be repriced on every tick
 
-A real desk's holdings, its [Book](../glossary.md#book), can contain thousands of
-[Positions](../glossary.md#position). Pricing one Position properly, with its sensitivities, means pricing
+A real desk's holdings, its [Book](glossary.md#book), can contain thousands of
+[Positions](glossary.md#position). Pricing one Position properly, with its sensitivities, means pricing
 it many times, once for each bumped input. Doing that for every Position on every market move is too
 slow, and most of the work would be wasted: most moves are too small to change most numbers that matter.
 
 The central engineering problem of a real-time risk system is deciding *what to recompute*. The engine
 solves it with selective repricing. An Instrument is repriced only when one of the Risk Factors it depends
-on has moved past a [Materiality Threshold](../glossary.md#materiality-threshold) since the last time it
+on has moved past a [Materiality Threshold](glossary.md#materiality-threshold) since the last time it
 was priced. Article 5 is about this, and it is the thread that runs through the rest of the series.
 
 ## How it works
@@ -92,7 +92,7 @@ was priced. Article 5 is about this, and it is the thread that runs through the 
 Before any of that, a risk system needs a model of what the desk holds. Three nouns carry the whole
 series.
 
-**An [Instrument](../glossary.md#instrument) is the terms of a contract.** "The US Treasury 4.125% note
+**An [Instrument](glossary.md#instrument) is the terms of a contract.** "The US Treasury 4.125% note
 maturing 31 August 2028" is an Instrument, and so is "pay 3.95% fixed against the 3-month rate until July
 2031". An Instrument knows its coupon, its dates and its conventions, and it can price itself per unit of
 notional: per 100 of face, for a bond. It holds no quantity. It says nothing about how much of it anyone
@@ -130,12 +130,12 @@ flowchart LR
 With a Book in hand, "risk" has a precise meaning. It is a *sensitivity*: how much the value changes when
 one input moves by a small, fixed amount, with everything else held still.
 
-The most important sensitivity in fixed income is [DV01](../glossary.md#dv01), the "dollar value of a
+The most important sensitivity in fixed income is [DV01](glossary.md#dv01), the "dollar value of a
 basis point". It is the change in value when interest rates move by one basis point (0.01%). A long bond
 loses value when rates rise, so a desk long 10 million of a two-year note has a DV01 of roughly
 $1,900: every basis point up in rates costs about that much. Article 4 covers DV01 and its more useful
-cousin, [Bucketed DV01](../glossary.md#bucketed-dv01), which splits the exposure across points on the
-curve. Article 7 covers [CS01](../glossary.md#cs01), the same idea for credit spreads.
+cousin, [Bucketed DV01](glossary.md#bucketed-dv01), which splits the exposure across points on the
+curve. Article 7 covers [CS01](glossary.md#cs01), the same idea for credit spreads.
 
 Sensitivities also add up. The Book's DV01 is the sum of its Positions' DV01s. That is why a single number
 at the top of a risk screen can summarise thousands of Positions, and why a short Position can hedge a
@@ -167,7 +167,7 @@ long one.
 
 There is one wrinkle to that sum. Treasury futures are margined daily: gains and losses are settled in
 cash every day, so an open futures Position is worth nothing on its own. The engine's
-[Position Value](../glossary.md#position-value) for a future is therefore zero. The future's DV01 is still
+[Position Value](glossary.md#position-value) for a future is therefore zero. The future's DV01 is still
 real, and it is exactly why a desk holds futures: to change the Book's rate exposure without tying up the
 cash that buying bonds would need. Article 6 covers futures.
 
@@ -255,13 +255,13 @@ flowchart LR
 - **Market data.** The starting point is real: the US Treasury's published par yield curve for a given
   day.[^ust-method] The engine turns it into zero rates and discount factors (article 2).
 - **The simulated market.** From there the market is simulated, one
-  [Tick](../glossary.md#tick) at a time. Rates move under a Hull-White model (article 3). The futures
+  [Tick](glossary.md#tick) at a time. Rates move under a Hull-White model (article 3). The futures
   Basis, credit spreads and trade reports move under their own processes, with correlated shocks
   (articles 6, 7, 8 and 10). Simulation is what makes a real-time system possible to study on a laptop:
   the market moves every second, and a fixed seed makes every run identical.
 - **The risk engine.** On each Tick the engine reprices the Instruments whose Risk Factors have moved
   materially, computes their sensitivities, and rolls them up (articles 4 and 5).
-- **The browser.** Each cycle's changes stream to the UI as a [Risk Update](../glossary.md#risk-update)
+- **The browser.** Each cycle's changes stream to the UI as a [Risk Update](glossary.md#risk-update)
   (article 11).
 
 ## See it running
@@ -291,17 +291,17 @@ After 30 seconds the header shows **Tick 30** with a *Stopped* badge.
 A tour, top to bottom:
 
 **① The header.** The Tick (30) and the simulated time since the start (+1d 6h). The
-[Curve Source](../glossary.md#curve-source) is *Bundled*, meaning the curve was loaded from the snapshot
+[Curve Source](glossary.md#curve-source) is *Bundled*, meaning the curve was loaded from the snapshot
 shipped with the code, not fetched from the Treasury site. The curve date is 2026-09-11. The
-[Valuation Date](../glossary.md#valuation-date) is 2026-09-12. The engine keeps two clocks. Ticks move the
+[Valuation Date](glossary.md#valuation-date) is 2026-09-12. The engine keeps two clocks. Ticks move the
 market every simulated hour, but the Valuation Date, which pricing uses for accrued interest and time to
-maturity, moves only at a [Day Rollover](../glossary.md#day-rollover), every 24 Ticks. The first one
+maturity, moves only at a [Day Rollover](glossary.md#day-rollover), every 24 Ticks. The first one
 happened at Tick 24, and the next is 18 Ticks away. The seed, 42, is what makes the run replayable.
 Article 3 covers the two clocks.
 
 **② The USD Treasury curve.** The orange dots are the published par yields the curve was built from.
 The blue line is the engine's current zero curve, after 30 Ticks of simulated rate moves. The row
-beneath lists the zero rate at each [Pillar](../glossary.md#pillar), the fixed tenors where risk is
+beneath lists the zero rate at each [Pillar](glossary.md#pillar), the fixed tenors where risk is
 reported: 4.019% at 3 months, 4.906% at 10 years, 5.341% at 30 years. Article 2 builds this curve.
 
 **③ Book risk.** The two headline numbers:
@@ -329,23 +329,23 @@ The last column is the one this series is about. At Tick 30:
 
 The market moved on every one of the six Ticks since the rollover, yet 14 of the 16 Instruments were
 not repriced. None of their inputs had moved past its Materiality Threshold. The strip shows how far the
-unrepriced inputs have drifted, their [Staleness](../glossary.md#staleness). For example, curve Pillars
+unrepriced inputs have drifted, their [Staleness](glossary.md#staleness). For example, curve Pillars
 are at most 0.89bp from where their Instruments were last priced, against a 2bp threshold. For Boreal,
 the reason it did reprice is visible in the next panel: a new dealer Quote reset its Mark on this Tick.
 Article 5 is about this trade-off.
 
-**⑤ Credit Marks.** One row per corporate issuer: its [Rating Bucket](../glossary.md#rating-bucket), how
+**⑤ Credit Marks.** One row per corporate issuer: its [Rating Bucket](glossary.md#rating-bucket), how
 often its bonds trade, its current Mark, and the last observed trade report
-([Print](../glossary.md#print)) and dealer [Quote](../glossary.md#quote). Two issuers trade about four
+([Print](glossary.md#print)) and dealer [Quote](glossary.md#quote). Two issuers trade about four
 times a simulated day. The other two barely trade at all. Neither Acme nor Delmar has printed yet, and
 Delmar has not even been quoted, so their Marks come from the model alone. Articles 7 and 8 cover credit.
 
 **⑥ Interest rate swaps.** The two swaps: their notional, value, DV01, the current floating period, and
-its [Fixing](../glossary.md#fixing), the floating rate already recorded for it. The pay-fixed swap P16
+its [Fixing](glossary.md#fixing), the floating rate already recorded for it. The pay-fixed swap P16
 has DV01 −8,404. It gains when rates rise, the opposite of a bond. Article 9 covers swaps.
 
-**⑦ Treasury futures.** Each future's price, the [Proxy Bond](../glossary.md#proxy-bond) standing in
-for its cheapest-to-deliver note, the conversion factor, and the [Basis](../glossary.md#basis). Article 6
+**⑦ Treasury futures.** Each future's price, the [Proxy Bond](glossary.md#proxy-bond) standing in
+for its cheapest-to-deliver note, the conversion factor, and the [Basis](glossary.md#basis). Article 6
 covers futures.
 
 **⑧ Lifecycle events.** Coupons, redemptions and swap payments, processed at Day Rollover. At Tick 30

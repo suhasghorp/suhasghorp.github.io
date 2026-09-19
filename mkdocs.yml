@@ -1,6 +1,6 @@
 site_name: Building a Fixed Income Risk Engine
 site_description: How real-time risk works, and a working engine to prove it.
-site_url: https://suhasghorp.github.io/
+site_url: https://suhasghorp.github.io/fixed-income-risk/
 repo_url: https://github.com/suhasghorp/fixed-income-risk-engine
 repo_name: fixed-income-risk-engine
 edit_uri: ""
@@ -35,7 +35,7 @@ not_in_nav: |
   /fixed-income-risk/_template.md
 
 nav:
-  - Home: index.md
+  - Home: fixed-income-risk/index.md
   - Articles:
       - "1. What a risk system is for": fixed-income-risk/01-what-a-risk-system-is-for.md
       - "2. The yield curve": fixed-income-risk/02-the-yield-curve.md
@@ -48,7 +48,7 @@ nav:
       - "9. Interest rate swaps": fixed-income-risk/09-interest-rate-swaps.md
       - "10. Correlation": fixed-income-risk/10-correlation.md
       - "11. The runtime": fixed-income-risk/11-the-runtime.md
-  - Glossary: glossary.md
+  - Glossary: fixed-income-risk/glossary.md
 
 markdown_extensions:
   - abbr

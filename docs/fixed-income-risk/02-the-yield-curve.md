@@ -8,7 +8,7 @@
 
 
 **Previously:** [article 1](01-what-a-risk-system-is-for.md) set out what a risk system is for: to say, at
-any moment, how the value of a [Book](../glossary.md#book) changes when the market moves. It showed that
+any moment, how the value of a [Book](glossary.md#book) changes when the market moves. It showed that
 fixed income prices are mostly derived rather than observed, and that the derivation starts from one object:
 the yield curve.
 
@@ -260,13 +260,13 @@ Two more ideas complete the curve.
 
 **Knots are not Pillars.** The curve's knots are wherever the inputs are: 14 of them, six in the first six
 months. A risk report wants something steadier. The engine reports the curve, and measures
-[Bucketed DV01](../glossary.md#bucketed-dv01), at fixed [Pillars](../glossary.md#pillar): 3M, 1Y, 2Y, 3Y,
+[Bucketed DV01](glossary.md#bucketed-dv01), at fixed [Pillars](glossary.md#pillar): 3M, 1Y, 2Y, 3Y,
 5Y, 7Y, 10Y, 20Y and 30Y (the `risk.pillars` setting). The zero rate at each Pillar is also a
-[Risk Factor](../glossary.md#risk-factor), and article 5 builds selective repricing on those Pillar
+[Risk Factor](glossary.md#risk-factor), and article 5 builds selective repricing on those Pillar
 values.
 
 **The curve has a date and a source.** The par yields are an end-of-day snapshot, published once a day.
-When the engine starts it needs one, and its [Curve Source](../glossary.md#curve-source) records where it
+When the engine starts it needs one, and its [Curve Source](glossary.md#curve-source) records where it
 came from:
 
 1. **Live**: the latest curve downloaded from the Treasury's published CSV file. A successful download is
@@ -443,7 +443,7 @@ bundled snapshot directly, touching neither the network nor the cache.
 
 ## See it running
 
-The curve the engine builds is what it shows at [Tick](../glossary.md#tick) 0, before the simulation has
+The curve the engine builds is what it shows at [Tick](glossary.md#tick) 0, before the simulation has
 moved anything. From Tick 1 onwards, the rates model moves it (article 3). To hold the demo on its starting
 curve, slow the simulation clock right down:
 
@@ -459,7 +459,7 @@ cd frontend && npm install && npm run dev
 ![The USD Treasury curve at Tick 0 of the demo run](img/02-tick0-curve.png)
 
 - **The header** shows Tick 0, Curve Source *Bundled* and curve date 2026-09-11. The
-  [Valuation Date](../glossary.md#valuation-date) is the curve date, because no simulated time has
+  [Valuation Date](glossary.md#valuation-date) is the curve date, because no simulated time has
   passed yet.
 - **The orange dots** are the 14 par yields in the table above, crowded together at the short end
   where six of them fall in the first six months.

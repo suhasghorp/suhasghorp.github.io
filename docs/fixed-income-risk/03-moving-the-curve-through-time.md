@@ -190,21 +190,21 @@ Two details make the demo reproducible:
 
 Simulated time in the engine runs on two clocks, and keeping them apart is a deliberate design choice.
 
-**Ticks move the market.** A [Tick](../glossary.md#tick) is one step of the simulation. It advances
+**Ticks move the market.** A [Tick](glossary.md#tick) is one step of the simulation. It advances
 *model time* by a fixed amount (`risk.simulation.simulated-time-per-tick`, one hour in the demo), moves
 the short rate, and so moves the curve and every other market factor. Ticks are what make the risk
 numbers change from second to second.
 
-**Day Rollovers move the calendar.** The [Valuation Date](../glossary.md#valuation-date) is the calendar
+**Day Rollovers move the calendar.** The [Valuation Date](glossary.md#valuation-date) is the calendar
 date that pricing uses: for accrued interest, for the time left to each cash flow, and for which cash
 flows are still to come. It stays fixed for a whole simulated day. Every `risk.simulation.ticks-per-day`
-Ticks (24 in the demo), a [Day Rollover](../glossary.md#day-rollover) moves it on by one day, and at that
+Ticks (24 in the demo), a [Day Rollover](glossary.md#day-rollover) moves it on by one day, and at that
 moment:
 
 - every Instrument is aged by a day and repriced;
 - any coupon, redemption or swap payment that fell due is paid, as a
-  [Lifecycle Event](../glossary.md#lifecycle-event);
-- any swap resetting that day records its [Fixing](../glossary.md#fixing) (article 9).
+  [Lifecycle Event](glossary.md#lifecycle-event);
+- any swap resetting that day records its [Fixing](glossary.md#fixing) (article 9).
 
 Why not let the Valuation Date move a little every Tick? Because the calendar side of pricing is counted
 in whole days. Accrued interest counts days, and coupons fall on dates. An hour of calendar time has no

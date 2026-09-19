@@ -1,7 +1,7 @@
 # suhasghorp.github.io
 
 Source of the article series *Building a Fixed Income Risk Engine*, published at
-<https://suhasghorp.github.io>. The engine itself lives at
+<https://suhasghorp.github.io/fixed-income-risk/>. The engine itself lives at
 <https://github.com/suhasghorp/fixed-income-risk-engine>.
 
 Built with [MkDocs Material](https://squidfunk.github.io/mkdocs-material/) on MkDocs 1.6 (pinned: MkDocs 2.0 is
@@ -15,5 +15,5 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 ```
 
 - `docs/fixed-income-risk/_template.md`: the skeleton every article follows (built, not in the navigation).
-- `docs/glossary.md` and `includes/abbreviations.md`: generated from the engine's glossary by
+- `docs/fixed-income-risk/glossary.md` and `includes/abbreviations.md`: generated from the engine's glossary by
   `scripts/glossary.py`.
