@@ -31,9 +31,9 @@ that is.
 
 **The rating changes, and everybody knows at once.** A rating action is published. Agencies even signal
 ahead: an S&P outlook "assesses the potential direction of a long-term credit rating over the intermediate
-term", and a CreditWatch listing "focuses on identifiable events and short-term trends", though a
-CreditWatch "does not mean a rating change is inevitable".[^sp-outlook] Moody's has outlooks and its
-Watchlist.[^moodys]
+term", while a CreditWatch listing "focuses on identifiable events and short-term trends" and means S&P
+sees "at least a one-in-two likelihood, as a broad guideline, of a rating change ... within the next 90
+days".[^sp-outlook] Moody's has outlooks and its Watchlist.[^moodys]
 
 So the engine faces an awkward pair: a *hidden* price move and a *public* classification change, arriving
 together. What it does in between is the subject of this article.
@@ -356,11 +356,12 @@ Primary sources:
 
 - ISDA, *2014 ISDA Credit Derivatives Definitions*, §§4.1–4.7. The legal definition of a credit event.
 - ISDA, [*Taking a Look at the DCs*](https://www.isda.org/2024/01/17/taking-a-look-at-the-dcs/), 2024, and
-  the [*ISDA Credit Derivatives Determinations Committees
-  Rules*](https://www.cdsdeterminationscommittees.org/). How the market reaches one answer.
+  the *Credit Derivatives Determinations Committees Rules* (non-binding consolidated version, 2023),
+  published at [cdsdeterminationscommittees.org](https://www.cdsdeterminationscommittees.org/). How the
+  market reaches one answer.
 - S&P Global Ratings, *Default, Transition, and Recovery: 2024 Annual Global Corporate Default And Rating
   Transition Study*, March 2025. Transition matrices, fallen angels, and notches per downgrade.
-- S&P Global Ratings, *S&P Global Ratings Definitions*, December 2024, and Moody's, *Rating Symbols and
+- S&P Global Ratings, *S&P Global Ratings Definitions*, 2 December 2024, and Moody's, *Rating Symbols and
   Definitions*, June 2022. Grades, outlooks, CreditWatch and reviews.
 - Bloomberg, [*Bloomberg US Corporate Index* fact
   sheet](https://assets.bbhub.io/professional/sites/27/US-Corporate-Index.pdf). The index rules that
@@ -379,12 +380,12 @@ Textbooks:
   and settlement in practice.
 
 [^sp-notches]: S&P Global Ratings, *2024 Annual Global Corporate Default and Rating Transition Study*: "Since 1981, the annual average for the number of notches per downgrade has been 1.7 notches"; of 2024's rated defaulters, "91.7% were rated 'CCC+' or below prior to default".
-[^sp-outlook]: S&P Global Ratings Definitions (December 2024): an outlook "assesses the potential direction of a long-term credit rating over the intermediate term, which is generally up to two years for investment grade and generally up to one year for speculative grade"; CreditWatch "focuses on identifiable events and short-term trends", and "does not mean a rating change is inevitable". The commonly quoted "90 days" appears in this edition only for one specific case, so it is not a general rule.
+[^sp-outlook]: *S&P Global Ratings Definitions*, 2 December 2024, §II.A and Appendix §VIII.G: an outlook "assesses the potential direction of a long-term credit rating over the intermediate term, which is generally up to two years for investment grade and generally up to one year for speculative grade"; CreditWatch "focuses on identifiable events and short-term trends"; and ¶284: "Ratings may be placed on CreditWatch when we believe that there is at least a one-in-two likelihood, as a broad guideline, of a rating change or rating suspension or withdrawal ... within the next 90 days. Rating changes ... can occur without the ratings being placed on CreditWatch beforehand." The same document puts the investment-grade line below BBB-: obligations rated "'BB', 'B', 'CCC', 'CC', and 'C' are regarded as having significant speculative characteristics".
 [^moodys]: Moody's, *Rating Symbols and Definitions* (June 2022): "A Moody's rating outlook is an opinion regarding the likely rating direction over the medium term"; "A review indicates that a rating is under consideration for a change in the near term", and such ratings are "on Moody's 'Watchlist'".
 [^isda-list]: *2014 ISDA Credit Derivatives Definitions*, §4.1: "'Credit Event' means ... one or more of Bankruptcy, Failure to Pay, Obligation Acceleration, Obligation Default, Repudiation/Moratorium, Restructuring, or Governmental Intervention, as specified in the related Confirmation." Read from a third-party copy of the ISDA document.
 [^isda-ftp]: *2014 ISDA Credit Derivatives Definitions*, §4.5: Failure to Pay is, "after the expiration of any applicable Grace Period ..., the failure by the Reference Entity to make, when and where due, any payments in an aggregate amount of not less than the Payment Requirement".
 [^isda-dc]: ISDA, *Taking a Look at the DCs* (2024): the Determinations Committees "ensure there is a single decision-making process for determining whether a credit event has occurred".
-[^isda-vote]: *2016 ISDA Credit Derivatives Determinations Committees Rules*: "'Supermajority' means at least 80% of those participating in a binding vote have voted in favor of a particular answer"; questions not resolved by supermajority go to external review. The rules have been revised since 2016.
+[^isda-vote]: *Credit Derivatives Determinations Committees Rules*, non-binding consolidated version (2023), published by DC Administration Services on behalf of ISDA: "'Supermajority' means at least 80% of those participating in a binding vote have voted in favor of a particular answer." §4(a) sends a question under §3.1(c) (Credit Event Resolution) to External Review if a convened DC "holds a binding vote on, but is unable to Resolve by a Supermajority, such DC Question".
 [^ifrs-stale]: IFRS 13, Appendix B ¶B41: "Even when there has been a significant decrease in the volume or level of activity for the asset or liability, the objective of a fair value measurement remains the same"; ¶B38 on adjusting prices that are stale or require significant adjustment.
 [^ifrs-weight]: IFRS 13, Appendix B ¶¶B46–B47: less weight on "quotes that do not reflect the result of transactions", more weight on "quotes provided by third parties that represent binding offers".
 [^bbg-index]: Bloomberg US Corporate Index fact sheet: securities "must be rated investment grade (Baa3/BBB-/BBB- or higher) using the middle rating of Moody's, S&P and Fitch"; the rebalance date is "the last business day of each month". That index-tracking funds must then sell is an inference from these rules and fund mandates.
