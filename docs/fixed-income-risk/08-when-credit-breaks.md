@@ -265,9 +265,9 @@ cd frontend && npm install && npm run dev
 
 ![The Credit Marks panel at Tick 119, before the downgrade](img/08-tick119-credit.png)
 
-Acme is an A Industrials name with a Mark of 101.4bp, and it has printed four times in 119 Ticks. Behind
-the screen, its Latent Spread is 99.6bp: the Mark is 1.8bp too high, which is the ordinary state of
-affairs from article 7.
+Acme is an A Industrials name with a Mark of 92.1bp, and it has printed three times in 119 Ticks — at
+Ticks 53, 56 and 92. Behind the screen, its Latent Spread is 90.2bp: the Mark is 1.9bp too high, which is
+the ordinary state of affairs from article 7.
 
 ### The downgrade: Tick 120
 
@@ -276,27 +276,28 @@ Everything below happens in a single Tick.
 | | Tick 119 | Tick 120 |
 |---|---|---|
 | Rating Bucket | A Industrials | **BBB Industrials** |
-| Mark | 101.4bp | **142.6bp** |
-| Latent Spread (hidden) | 99.6bp | **220.5bp** |
-| Mark − truth | +1.8bp | **−77.9bp** |
+| Mark | 92.1bp | **139.3bp** |
+| Latent Spread (hidden) | 90.2bp | **217.3bp** |
+| Mark − truth | +1.9bp | **−78.0bp** |
 | Acme Prints per year | 60 | **1,800** |
-| CS01: A Industrials | +4,191 | **0** |
-| CS01: BBB Industrials | +2,562 | **+6,633** |
+| CS01: A Industrials | +4,243 | **0** |
+| CS01: BBB Industrials | +2,569 | **+6,670** |
 
-The Mark moved 41bp, which is not the 80bp jump: it is the difference between the two buckets' Sector
+The Mark moved 47bp, which is not the 80bp jump: it is the difference between the two buckets' Sector
 Factors, and nothing else. The engine has re-based on public information and is now **78bp below the
 truth**, and it knows it:
 
 ![The Credit Marks panel at Tick 121: Acme downgraded, Mark stale](img/08-tick121-credit.png)
 
 The badge reads **"▼ Downgraded, Mark stale"**. Acme's Prints per day has jumped from 0.2 to 4.9, the
-burst working. Its last Quote, 101.7bp, is now visibly from another world: it predates the event.
+burst working. Its last Print and Quote, 92.97bp from Tick 92 and 84.53bp from Tick 73, are now visibly
+from another world: they predate the event.
 
 The Book's credit rollup has moved in the same cycle:
 
 ![CS01 by Rating Bucket at Tick 121: A Industrials is empty, BBB Industrials holds four Positions](img/08-tick121-buckets.png)
 
-A Industrials is empty. BBB Industrials now holds four Positions worth 14.4 million with CS01 +6,633.
+A Industrials is empty. BBB Industrials now holds four Positions worth 14.5 million with CS01 +6,670.
 Acme's two bonds did not move between books or change hands; the classification moved underneath them,
 and the risk report followed within the same repricing cycle. The bonds' Dependencies were rewired at the
 same moment: they now watch the BBB Industrials Sector Factor.
@@ -304,26 +305,26 @@ same moment: they now watch the BBB Industrials Sector Factor.
 ### The wait: Ticks 121 to 131
 
 For twelve Ticks, nothing resolves. The Mark drifts with the Systemic and Sector factors, the gap to the
-truth stays at about −78bp, and the badge stays up. The Book is carrying an unrecognised loss, and the
-engine's own numbers say how big it could be: Acme's Position P11 has CS01 of about 2,017, so 78bp of
-missing spread is roughly
+truth stays between −77.9 and −78.5bp, and the badge stays up. The Book is carrying an unrecognised loss,
+and the engine's own numbers say how big it could be: Acme's Position P11 has CS01 of about 2,028, so
+78bp of missing spread is roughly
 
 $$
-2{,}017 \times 78 \approx \$157{,}000 .
+2{,}028 \times 78 \approx \$158{,}000 .
 $$
 
 ### The catch-up: Tick 132
 
 ![The Credit Marks panel at Tick 132, after the first Print](img/08-tick132-credit.png)
 
-A Print arrives at 220.3bp. The Mark resets to it, the badge clears, and the row shows what happened:
+A Print arrives at 215.94bp. The Mark resets to it, the badge clears, and the row shows what happened:
 *BBB Industrials · from A Industrials at tick 120*, with **Mark − Print 0.0bp**.
 
-Position P11's value falls from 4,775,428 to 4,620,849: a drop of **\$154,579**, against the \$157,000 the
+Position P11's value falls from 4,795,151 to 4,642,633: a drop of **\$152,518**, against the \$158,000 the
 CS01 estimate suggested. The loss was real from Tick 120. It only became visible at Tick 132.
 
-From there the Mark tracks the truth within about 2bp again, and the Print intensity decays back towards
-normal: 1,800 a year at the event, 1,295 by Tick 150.
+From there the Mark tracks the truth within a few basis points again — it is within 0.3bp of it two Ticks
+later — and the Print intensity decays back towards normal: 1,800 a year at the event, 1,295 by Tick 150.
 
 !!! realdesk "What a real desk does differently"
 

@@ -240,7 +240,7 @@ that file explains why it is there. A test, `StoppedStreamTest`, fails if the fl
 
 ## See it running
 
-Coalescing does not happen in the normal demo: repricing 16 Instruments takes far less than a second.
+Coalescing does not happen in the normal demo: repricing 20 Instruments takes far less than a second.
 The `demo-slow` profile forces it, with Ticks every 200ms and an artificial 1-second delay per repricing
 cycle:
 

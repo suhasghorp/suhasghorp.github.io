@@ -256,10 +256,10 @@ Then one row per issuer, and the rows differ in a way that is the whole point of
 
 | Issuer | Bucket | Prints/day | Mark | Last Print | Last Quote |
 |---|---|---|---|---|---|
-| Acme Industries | A Industrials | 0.2 | 95.7bp | none yet | 96.8bp, 9 ticks ago |
-| Boreal Manufacturing | BBB Industrials | 4.1 | 129.0bp | 130.8bp, 6 ticks ago | 129.0bp, this tick |
-| Cascade Financial | A Financials | 4.1 | 92.1bp | 92.7bp, 1 tick ago | 97.0bp, 1 tick ago |
-| Delmar Logistics | BBB Industrials | 0.1 | 146.3bp | none yet | none yet |
+| Acme Industries | A Industrials | 0.2 | 85.1bp | none yet | 87.4bp, 12 ticks ago |
+| Boreal Manufacturing | BBB Industrials | 4.1 | 128.7bp | 131.9bp, 13 ticks ago | 128.2bp, 4 ticks ago |
+| Cascade Financial | A Financials | 4.1 | 92.0bp | 89.3bp, 6 ticks ago | 90.9bp, 3 ticks ago |
+| Delmar Logistics | BBB Industrials | 0.1 | 157.7bp | none yet | 156.9bp, 9 ticks ago |
 
 Delmar's Mark is worth a second look. It has never traded and never been quoted, so its 146.3bp is pure
 model: the opening Mark, which is the Systemic level plus its bucket's Sector level plus its own long-run
@@ -287,33 +287,43 @@ Over Ticks 1 to 119, the average gap between Mark and truth is:
 
 | Issuer | Observations | Mean &#124;Mark − Latent&#124; | Worst |
 |---|---|---|---|
-| Boreal (liquid) | 56 | 1.70bp | 6.77bp |
-| Cascade (liquid) | 48 | 2.00bp | 10.06bp |
-| Acme (illiquid) | 4 | 1.14bp | 3.09bp |
-| Delmar (illiquid) | 1 | 1.30bp | 2.78bp |
+| Boreal (liquid) | 52 | 1.55bp | 13.43bp |
+| Cascade (liquid) | 54 | 2.06bp | 7.41bp |
+| Acme (illiquid) | 5 | 3.43bp | 8.96bp |
+| Delmar (illiquid) | 1 | 7.63bp | 9.85bp |
 
-**The liquid names are, on average, further from the truth than the illiquid ones.** That is observation
-noise at work: the liquid issuers reset often, and every reset imports error, while the quiet issuers are
-carried smoothly by factors that happen to explain most of their movement. It is a genuine property of
-marking illiquid credit, not an artefact: a price built from one noisy quote can be worse than a
-well-constructed model price. The SEC made a related point in 2023 when it fined Bloomberg \$5 million for
-not disclosing that some BVAL prices for illiquid bonds rested on a single, uncorroborated broker
-quote.[^bval-fine]
+**On average, the Mark is better where the evidence is.** Boreal and Cascade are seen fifty-odd times in
+those 119 Ticks and sit 1.6 to 2.1bp from the truth. Delmar is seen *once*, and averages 7.6bp out — and
+over the full 240 Ticks it goes 152 consecutive Ticks, more than six simulated days, with nobody trading
+or quoting it at all. Matrix Pricing carries it through those six days on the Systemic and Sector Factors
+alone, and the error is the part of Delmar that those factors cannot explain.
 
-The comfort is temporary, though. Matrix Pricing only works while nothing happens to the issuer that the
-market has not seen. At Tick 120 something does, and Acme's gap reaches 78bp. That is the next article.
+**The worst single moments tell the opposite story**, and that is worth stopping on. The largest gap of
+any issuer belongs to a *liquid* one: Boreal, 13.43bp. That is observation noise. A liquid issuer resets
+its Mark on almost every Print and Quote, and each one carries error, so a single bad observation drags
+the Mark further from the truth than smooth Matrix Pricing ever does. A price built from one noisy quote
+can be worse than a well-constructed model price. The SEC made a related point in 2023 when it fined
+Bloomberg \$5 million for not disclosing that some BVAL prices for illiquid bonds rested on a single,
+uncorroborated broker quote.[^bval-fine]
+
+So liquidity buys accuracy on average and costs it in the tail — which is exactly the trade a desk is
+making when it marks from observations rather than from a model.
+
+Either way the comfort is temporary. Matrix Pricing only works while nothing happens to the issuer that
+the market has not seen. At Tick 120 something does, and Acme's gap reaches 78bp. That is the next
+article.
 
 ### Credit risk in the Book
 
-At Tick 30 the Book's five corporate Positions carry **CS01 +6,196**, and their DV01 is **+6,196** too:
+At Tick 30 the Book's five corporate Positions carry **CS01 +6,239**, and their DV01 is **+6,239** too:
 the same number, for the reason in the formula box. The rollup by Rating Bucket is what a credit desk
 reads:
 
 | Rating Bucket | Positions | Value | CS01 |
 |---|---|---|---|
-| A Industrials | 2 | 7,757,317 | +4,229 |
-| BBB Industrials | 2 | 6,919,435 | +2,581 |
-| A Financials | 1 | −1,973,520 | −614 |
+| A Industrials | 2 | 7,828,193 | +4,276 |
+| BBB Industrials | 2 | 6,919,305 | +2,579 |
+| A Financials | 1 | −1,978,374 | −616 |
 | BBB Financials | 0 | 0 | 0 |
 
 The negative row is the short Cascade Position: if financials spreads widen, that Position gains.

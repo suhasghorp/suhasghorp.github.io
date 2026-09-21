@@ -396,32 +396,34 @@ three points in the run:
 
 | Pillar (change since Tick 0, bp) | Tick 12 (+12h) | Tick 120 (+5d) | Tick 480 (+20d) |
 |---|---|---|---|
-| 3M | −5.42 | +6.42 | +3.51 |
-| 1Y | −5.37 | +5.45 | −1.98 |
-| 2Y | −5.28 | +4.91 | −3.68 |
-| 3Y | −5.17 | +4.61 | −4.32 |
-| 5Y | −4.93 | +4.30 | −4.48 |
-| 7Y | −4.71 | +4.07 | −4.42 |
-| 10Y | −4.39 | +3.80 | −4.09 |
-| 20Y | −3.53 | +3.01 | −3.46 |
-| 30Y | −2.90 | +2.44 | −2.93 |
+| 3M | −6.10 | −2.97 | +7.90 |
+| 1Y | −6.04 | −3.76 | +2.33 |
+| 2Y | −5.93 | −4.08 | +0.52 |
+| 3Y | −5.80 | −4.17 | −0.22 |
+| 5Y | −5.54 | −4.06 | −0.58 |
+| 7Y | −5.28 | −3.90 | −0.69 |
+| 10Y | −4.93 | −3.63 | −0.61 |
+| 20Y | −3.96 | −2.96 | −0.67 |
+| 30Y | −3.25 | −2.45 | −0.65 |
 
-- **After half a day** the curve has fallen, and the fall shrinks with maturity: 5.4bp at 3 months, 2.9bp
-  at 30 years. The ratio of the 30-year move to the 3-month move is 0.54, close to the ratio of the
+- **After half a day** the curve has fallen, and the fall shrinks with maturity: 6.1bp at 3 months, 3.3bp
+  at 30 years. The ratio of the 30-year move to the 3-month move is 0.53, close to the ratio of the
   loadings, $0.518 / 0.994 = 0.52$.
-- **After five days** the curve has risen instead, in the same shape: the most at the short end, the
-  least at the long end. Across the first 500 Ticks, the Tick-to-Tick moves at 3 months and at 30 years
-  have a correlation of 0.999996. One shock drives them all.
-- **After twenty days** the curve has changed *shape*: the 3-month rate is up 3.5bp while the 5-year is
-  down 4.5bp. No single short-rate shock does that. This is the passage of time. As model time advances,
+- **After five days** the curve is still down, and down in the same shape: the most at the short end, the
+  least at the long end, every Pillar on the same side. Across the first 500 Ticks, the Tick-to-Tick moves
+  at 3 months and at 30 years have a correlation of 0.999996 — and no pair of Pillars in the nine
+  correlates less than that. One shock drives them all.
+- **After twenty days** the curve has changed *shape*: the 3-month rate is up 7.9bp while the 7-year is
+  down 0.7bp. No single short-rate shock does that. This is the passage of time. As model time advances,
   the curve is the one seen from a later date, and today's forward curve is not flat. Twenty days in, the
   deterministic drift built into $\theta(t)$ has carried the short end up along today's rising short-end
-  forwards, while the accumulated shocks have pulled the rest of the curve down. The random part still
-  moves every maturity in lockstep. The shape changes come from time, not from a second factor.
+  forwards, while the accumulated shocks have left the rest of the curve roughly where it started. The
+  random part still moves every maturity in lockstep. The shape changes come from time, not from a second
+  factor.
 
 The Tick-to-Tick moves have the size the model predicts, too. Over the first 500 Ticks, the standard
-deviation of the 3-month move is 1.07bp per Tick and of the 30-year move 0.56bp. The formulas give
-$0.994 \times 1.07 = 1.06$bp and $0.518 \times 1.07 = 0.55$bp.
+deviation of the 3-month move is 1.06bp per Tick and of the 30-year move 0.55bp. The formulas give
+$0.994 \times 1.07 = 1.06$bp and $0.518 \times 1.07 = 0.55$bp — to two decimal places, exactly.
 
 **The first Lifecycle Event.** Nothing is paid until Tick 480, the Day Rollover into 1 October 2026. That
 day Boreal Manufacturing's 5.10% bond pays its semi-annual coupon, 2.55 per 100 of face. Position P13

@@ -458,8 +458,11 @@ cd frontend && npm install && npm run dev
 
 ![The USD Treasury curve at Tick 0 of the demo run](img/02-tick0-curve.png)
 
-- **The header** shows Tick 0, Curve Source *Bundled* and curve date 2026-09-11. The
-  [Valuation Date](glossary.md#valuation-date) is the curve date, because no simulated time has
+- **The header** shows Tick 0 and a Curve Source per currency: *USD Bundled 2026-09-11* and *EUR Bundled
+  2026-09-17*. This article is about the dollar curve, the one the chart draws; the euro one arrives in
+  article 12, and it is worth noticing now only because the header has room for both, and because a
+  Curve Source is a per-currency thing rather than a global setting. The
+  [Valuation Date](glossary.md#valuation-date) is the USD curve date, because no simulated time has
   passed yet.
 - **The orange dots** are the 14 par yields in the table above, crowded together at the short end
   where six of them fall in the first six months.

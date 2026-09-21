@@ -244,7 +244,7 @@ cd frontend && npm install && npm run dev
 ![The swaps panel at Tick 815, the day before the reset](img/09-tick815-swaps.png)
 
 P16 is in the period 2026-07-15 → 2026-10-15, paying a Fixing of **3.8916%**, the rate seeded at startup.
-Its next reset is tomorrow. The Position is worth 1,027,996 with DV01 −8,284.
+Its next reset is tomorrow. The Position is worth 577,770 with DV01 −8,491.
 
 ### The reset: Tick 816
 
@@ -253,7 +253,7 @@ Its next reset is tomorrow. The Position is worth 1,027,996 with DV01 −8,284.
 Three things changed at once:
 
 - **The period rolled** to 2026-10-15 → 2027-01-15.
-- **A new Fixing was recorded**: **4.5614%**, the 3-month rate implied by the curve on the reset date. It
+- **A new Fixing was recorded**: **4.0025%**, the 3-month rate implied by the curve on the reset date. It
   will not change again, whatever the curve does.
 - **The old period paid.** The floating leg's coupon is the old Fixing over its 92 days:
 
@@ -265,9 +265,11 @@ which on 20 million is **\$198,905.36**, and appears as a Lifecycle Event:
 
 ![The Lifecycle Events panel at Tick 816: the floating-leg payment](img/09-tick816-lifecycle.png)
 
-The Position's value falls from 1,027,996 to **819,701**. Most of that, \$198,905, is not a loss: it is
-cash that has left the swap and been received by the holder. This is the same bookkeeping as a bond's
-coupon at a Day Rollover (article 3).
+The Position's value falls from 577,770 to **397,074**, a drop of \$180,695 — and the payment was
+\$198,905. The swap is worth *more* than the arithmetic of the payment alone suggests, by about
+\$18,000, because the market moved on the same Tick. Neither number is a loss: \$198,905 is cash that has
+left the swap and been received by the holder. This is the same bookkeeping as a bond's coupon at a Day
+Rollover (article 3), with the ordinary day's move on top of it.
 
 ### The value, taken apart
 
@@ -275,21 +277,21 @@ At Tick 816 the whole swap is four numbers:
 
 | Component | Per 100 of notional |
 |---|---|
-| Fixed leg: 10 remaining payments at 3.950%, 30/360 | −17.4569 |
-| Floating: known coupon, 4.5614% × 92/360, discounted | +1.1523 |
-| Floating: everything after it, P(2027-01-15) − P(2031-07-15) = 0.98847748 − 0.78444638 | +20.4031 |
-| **Swap value (pay fixed)** | **+4.0985** |
+| Fixed leg: 10 remaining payments at 3.950%, 30/360 | −17.6765 |
+| Floating: known coupon, 4.0025% × 92/360, discounted at 0.98987498 | +1.0125 |
+| Floating: everything after it, P(2027-01-15) − P(2031-07-15) = 0.98987498 − 0.80338138 | +18.6494 |
+| **Swap value (pay fixed)** | **+1.9854** |
 
-On 20 million that is **819,700.98**, which is exactly what the Book table shows. Eighteen future floating
+On 20 million that is **397,074.45**, which is exactly what the Book table shows. Eighteen future floating
 payments never had to be projected individually: the two discount factors in the third row stand in for
 all of them.
 
 ### Where the risk sits
 
 The swaps panel's lower table gives each swap's [Bucketed DV01](glossary.md#bucketed-dv01). P16's risk is
-concentrated at **5Y (−6,798)** and **3Y (−1,261)**, with a small positive **3M (+483)** from the known
-coupon and the near-dated discount factor. P17, the 10-year receiver, sits at **10Y (+6,377)** and
-**7Y (+3,179)** with the opposite sign.
+concentrated at **5Y (−6,961)** and **3Y (−1,289)**, with a small positive **3M (+483)** from the known
+coupon and the near-dated discount factor. P17, the 10-year receiver, sits at **10Y (+6,646)** and
+**7Y (+3,308)** with the opposite sign.
 
 That is the Book's shape from [article 4](04-pricing-a-bond-and-measuring-its-risk.md) explained: the
 5-year bucket is negative because a short bond Position and a pay-fixed swap both sit there.

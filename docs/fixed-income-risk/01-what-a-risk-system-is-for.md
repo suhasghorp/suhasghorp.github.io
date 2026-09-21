@@ -380,7 +380,7 @@ there are none yet. The first ones arrive later in the run, and article 3 follow
 !!! realdesk "What a real desk does differently"
 
     - **Scale.** A real Book holds thousands of Positions, across many desks and legal entities, rolled
-      up through a hierarchy of books to the firm. The engine's Book has 17 Positions so every row fits
+      up through a hierarchy of books to the firm. The engine's Book has 21 Positions so every row fits
       on one screen.
     - **Where Positions come from.** Positions are not a CSV file. Trades are booked in a trade-capture
       system, and a position-keeping system turns them into Positions, handling amendments,

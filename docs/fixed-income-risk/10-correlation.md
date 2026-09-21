@@ -23,7 +23,7 @@ as often happens in periods of stress", so government bond prices rise while ris
 fall.[^fsb] Treasury yields down, credit spreads wider, at the same time.
 
 For a Book like this one, that combination matters more than either move alone. The Book is long rates
-risk (DV01 +20,702) and long credit risk (CS01 +6,194). A fall in rates is a gain; a widening of spreads
+risk (DV01 +25,384) and long credit risk (CS01 +6,240). A fall in rates is a gain; a widening of spreads
 is a loss. If the two are independent, the Book's day is the sum of two unrelated draws. If they move
 together in the way the market usually does, part of every rates gain is handed back in credit, and the
 Book's real volatility is *lower* than the sum of its parts suggests.
@@ -49,24 +49,35 @@ times.
 
 ## How it works
 
-### One draw, three shocks
+### One draw, nine shocks
 
-The engine correlates the three *drivers* it simulates with diffusions: the short rate (article 3), the
-Systemic credit factor (article 7) and each future's Basis (article 6). On every
-[Tick](glossary.md#tick) it draws one set of correlated standard normal shocks, and hands them to the
-simulators.
+Every diffusion in the engine is a *named factor* in one matrix. The demo names nine of them
+(`risk.correlation.factors`): the two curves' short rates, `shortRate.USD` and `shortRate.EUR`
+(articles 3 and 12); the Systemic credit factor, `systemic` (article 7); two FX spots and one pair's
+forward points (article 12); two Surface Points' Normal Volatilities (article 13); and each future's
+`basis` (article 6). On every [Tick](glossary.md#tick) the engine draws one set of correlated standard
+normal shocks and hands each factor its own.
 
-The demo's matrix (`risk.correlation.matrix`) is:
+Naming them is the point. A matrix of anonymous positions has to be re-indexed by hand every time the
+engine grows an asset class, and a mistake is silent — the wrong factor simply gets the wrong shock. With
+names, adding a currency means adding a row and a name, and a factor nobody has named is a startup
+failure rather than a wrong number.
 
-|  | short rate | Systemic | Basis |
-|---|---|---|---|
-| **short rate** | 1 | −0.3 | 0.1 |
-| **Systemic** | −0.3 | 1 | 0 |
-| **Basis** | 0.1 | 0 | 1 |
+Most of the demo's matrix is the identity. Only four entries are not, and it is easier to read them as a
+list than as a nine-by-nine grid:
 
-The −0.3 is flight to quality: rates down, spreads up. The +0.1 ties the futures Basis loosely to rates.
-The 0 says the Basis and credit have no direct link, which does not mean they never move together: both
-are correlated with rates, so they inherit a little correlation through it.
+| Pair | Correlation |
+|---|---|
+| `shortRate.USD` vs `systemic` | −0.3 |
+| `shortRate.USD` vs `shortRate.EUR` | +0.6 |
+| `shortRate.USD` vs `basis` | +0.1 |
+| everything else | 0 |
+
+The −0.3 is flight to quality: rates down, spreads up. The +0.6 says the dollar and euro curves move
+largely together, which is what makes them two curves rather than one copied twice. The +0.1 ties the
+futures Basis loosely to rates. The zeros say there is no *direct* link, which does not mean the factors
+never move together: several are correlated with the dollar short rate, so they inherit a little
+correlation through it.
 
 ### From independent draws to correlated ones
 
@@ -89,16 +100,21 @@ the target.
     $$
 
     so $Z$ has exactly the correlations asked for, and each component is still standard
-    normal.[^haugh] For the demo's matrix,
+    normal.[^haugh] The demo's $L$ is nine by nine, and six of its rows are a single 1 on the diagonal,
+    because six of the factors are correlated with nothing. The four rows that do any work are:
 
-    $$
-    L =
-    \begin{pmatrix}
-    1 & 0 & 0\\
-    -0.3 & 0.953939 & 0\\
-    0.1 & 0.031449 & 0.994490
-    \end{pmatrix}.
-    $$
+    | | `shortRate.USD` | `systemic` | `shortRate.EUR` | own |
+    |---|---|---|---|---|
+    | `shortRate.USD` | 1 | | | |
+    | `systemic` | −0.3 | 0.953939 | | |
+    | `shortRate.EUR` | 0.6 | 0.188691 | 0.777429 | |
+    | `basis` | 0.1 | 0.031449 | −0.084810 | 0.990867 |
+
+    Read a row as a recipe: the euro short rate's shock is 0.6 of the dollar rate's draw, plus 0.188691
+    of the credit draw, plus 0.777429 of a draw of its own. The 0.188691 is worth noticing, because
+    nobody asked for it — the euro curve is uncorrelated with credit in the matrix, and the entry is
+    what makes it *stay* uncorrelated once it has taken 0.6 of a draw that is itself correlated
+    with credit.
 
     Read the rows: the short-rate shock is the first draw; the Systemic shock is −0.3 of that draw plus
     0.954 of a fresh one; the Basis shock takes a little of both and adds a third.
@@ -108,10 +124,11 @@ the target.
 
 ### Not every matrix is a correlation matrix
 
-You cannot pick three numbers freely. A correlation matrix must be "a symmetric positive semidefinite
+You cannot pick the numbers freely. A correlation matrix must be "a symmetric positive semidefinite
 matrix with unit diagonal",[^higham] and it is easy to write down three pairwise correlations that no set
 of random variables can have. If A and B are strongly positively correlated, and B and C are too, then A
-and C cannot be strongly *negatively* correlated.
+and C cannot be strongly *negatively* correlated. The more factors there are, the easier this is to get
+wrong: the constraint is on the whole matrix, not on any pair in it.
 
 The test is the Cholesky factorisation itself. Attempting it is the standard way to check positive
 definiteness: if a pivot comes out zero or negative, the matrix is not positive definite, and the check is
@@ -124,8 +141,12 @@ one.[^higham-nearest] The engine takes the blunter route: it refuses to start.
 
 ### What stays independent
 
-Only three drivers are correlated. Deliberately left independent:
+Nine factors are named; only four pairs among them are correlated. Deliberately left independent:
 
+- **FX spot, forward points and volatility.** They are in the matrix, so they can be tied to rates and to
+  each other the day someone has a view on how — and today nobody does, so their rows are zero. Being in
+  the matrix uncorrelated is a different thing from being outside it: the first is a decision, the second
+  is an omission.
 - **Sector Factors** (one per [Rating Bucket](glossary.md#rating-bucket)) and **Idiosyncratic Factors**
   (one per issuer). They inherit common movement through the Systemic Factor, which is exactly the
   hierarchy of article 7: shared first, specific second.
@@ -179,7 +200,7 @@ check:
 
 [View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/model/CorrelationMatrix.java#L124-L144)
 
-Generating a Tick's shocks is then three lines of arithmetic on rows of $L$:
+Generating a Tick's shocks is then one loop over the rows of $L$:
 
 ```java title="CorrelatedShockGenerator.java" linenums="44"
     /**
@@ -231,9 +252,18 @@ Over the first **2,000 Ticks**:
 
 | Pair | Target | Realised |
 |---|---|---|
-| short rate vs Systemic | −0.30 | **−0.2995** |
-| short rate vs Basis | +0.10 | **+0.0855** |
-| Systemic vs Basis | 0.00 | **+0.0045** |
+| USD short rate vs Systemic | −0.30 | **−0.3098** |
+| USD short rate vs EUR short rate | +0.60 | **+0.6057** |
+| USD short rate vs Basis | +0.10 | **+0.1164** |
+| Systemic vs Basis | 0.00 | **−0.0221** |
+| Systemic vs EUR short rate | 0.00 | **−0.0292** |
+| EUR/USD spot vs USD short rate | 0.00 | **+0.0043** |
+| 1Mx5Y vol vs 1Yx10Y vol | 0.00 | **+0.0128** |
+
+The three zeros at the bottom are as informative as the three numbers above them. Nothing in the matrix
+ties FX or volatility to anything, and two thousand Ticks later they are still untied, to within the
+sampling error of two thousand draws. A factor is independent because the matrix says so, and it stays
+that way.
 
 ![Two thousand Ticks of shocks, as independent draws and after the Cholesky factor](img/10-shocks-light.svg#only-light)
 ![Two thousand Ticks of shocks, as independent draws and after the Cholesky factor](img/10-shocks-dark.svg#only-dark)
@@ -244,27 +274,27 @@ cloud tilts, and nothing else changes: both axes are still standard normal.*
 The correlation survives the journey into the factors themselves. Measuring the *changes* in what the UI
 displays, rather than the shocks behind them:
 
-- 10Y zero rate vs the Systemic Factor: **−0.3007**
-- 10Y zero rate vs the ZN Basis: **+0.0923**
+- 10Y zero rate vs the Systemic Factor: **−0.3111**
+- 10Y zero rate vs the ZN Basis: **+0.0643**
 
 ### What it costs the Book
 
-Per Tick, the 10Y zero rate moves with a standard deviation of 0.834bp and the Systemic Factor 0.428bp.
-Combined with the −0.30 correlation, that implies a beta of **0.154bp of spread per 1bp of rates**, in the
+Per Tick, the 10Y zero rate moves with a standard deviation of 0.838bp and the Systemic Factor 0.432bp.
+Combined with the −0.31 correlation, that implies a beta of **0.160bp of spread per 1bp of rates**, in the
 opposite direction.
 
-So for the Book at Tick 24 (DV01 +20,702, CS01 +6,194), a 1bp fall in rates is worth:
+So for the Book at Tick 24 (DV01 +25,384, CS01 +6,240), a 1bp fall in every curve is worth:
 
 | Component | P&L on a 1bp fall in rates |
 |---|---|
-| Rates P&L | **+20,702** |
-| Credit P&L (Systemic widens 0.154bp) | **−956** |
-| **Net** | **+19,745** |
+| Rates P&L | **+25,384** |
+| Credit P&L (Systemic widens 0.160bp) | **−999** |
+| **Net** | **+24,385** |
 
-About **5%** of the rates gain is handed back through credit. With independent factors it would have been
-the full +20,702.
+About **4%** of the rates gain is handed back through credit. With independent factors it would have been
+the full +25,384.
 
-That 0.154 is worth a moment. Duffee's empirical estimate, about 1.5bp of Aa spread per 10bp move in
+That 0.160 is worth a moment. Duffee's empirical estimate, about 1.5bp of Aa spread per 10bp move in
 Treasury yields, is 0.15.[^duffee] The demo's number is not calibrated to his: it falls out of a
 correlation picked by hand and the relative volatilities of two simulated processes. The agreement is a
 coincidence, but a reassuring one, and it is the right order of magnitude for a non-callable investment
@@ -276,16 +306,24 @@ Correlations are configuration, so they can be set to nonsense. The engine check
 
 ```bash
 cd backend && mvn spring-boot:run -Dspring-boot.run.profiles=demo \
-    -Dspring-boot.run.arguments=--risk.correlation.matrix=1,0.9,-0.9;0.9,1,0.9;-0.9,0.9,1
+    -Dspring-boot.run.arguments=\
+'--risk.correlation.factors=shortRate.USD, systemic, basis',\
+'--risk.correlation.matrix=1,0.9,-0.9;0.9,1,0.9;-0.9,0.9,1'
 ```
 
 ```text
-Invalid correlation matrix (short rate, Systemic Factor, Basis): must be positive definite;
+Invalid correlation matrix [shortRate.USD, systemic, basis]: must be positive definite;
 got [[1.0, 0.9, -0.9], [0.9, 1.0, 0.9], [-0.9, 0.9, 1.0]]
 ```
 
-The application does not start. Rates and credit are strongly positively correlated in that matrix, credit
-and the Basis too, yet rates and the Basis strongly negatively: no three random variables behave that way.
+The application does not start, and it names the factors it was given, in order, so the offending entry
+can be found by counting along a row rather than by guessing. Rates and credit are strongly positively
+correlated in that matrix, credit and the Basis too, yet rates and the Basis strongly negatively: no three
+random variables behave that way.
+
+The factor names are checked as well as the numbers. Cut the list down to three, as above, and the engine
+still refuses to start until every currency with a Curve Source and every quoted Surface Point has a
+factor named for it — it will not simulate a euro curve whose shocks nobody specified.
 
 !!! realdesk "What a real desk does differently"
 

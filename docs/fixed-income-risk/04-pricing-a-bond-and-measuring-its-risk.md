@@ -148,8 +148,16 @@ The triangles have two useful properties:
 - **They add up.** At every tenor, the nine weights sum to exactly 1, so bumping all nine Pillars at once
   *is* a parallel bump. The nine Bucketed DV01s therefore add up to the parallel DV01 — to first order.
   They are not identical, because each is a separate repricing of a curved function, and second-order
-  effects do not cancel exactly. In the demo at Tick 24 the Book's buckets sum to 20,701.6145 against a
-  parallel DV01 of 20,701.6168: a difference of 0.002 on 20,700, or one part in nine million.
+  effects do not cancel exactly. In the demo at Tick 24 the Book's buckets sum to 25,383.9296 against a
+  parallel DV01 of 25,383.8273: a difference of 0.10 on 25,384, or one part in 250,000.
+
+    Where that tenth of a dollar comes from is worth knowing, because it is not spread evenly. Every
+    Treasury, corporate bond, future and swap in the Book agrees with its own bucket sum to within two
+    thousandths of a dollar — the seventeen of them together are out by 0.002, one part in nine million.
+    Almost the whole discrepancy, 0.099 of the 0.102, is **one Position**: the payer swaption, whose
+    value curves sharply enough that "to first order" starts to show. That is the first hint in this
+    series that an option is a different kind of thing, and article 13 is where it stops being a
+    rounding note and becomes the subject.
 - **They are local.** A cash flow lands in at most two buckets, split by how close it is to each. A cash
   flow exactly at a Pillar lands entirely in that bucket; one halfway between two Pillars splits evenly.
 
@@ -345,65 +353,69 @@ Position P01 is 10 million face of the 4.125% note maturing 31 August 2028. The 
 
 | Date | Cash flow (per 100) | Years (ACT/365) | Discount factor | Present value |
 |---|---|---|---|---|
-| 2027-02-28 | 2.0625 | 0.463014 | 0.98141907 | 2.024177 |
-| 2027-08-31 | 2.0625 | 0.967123 | 0.95955866 | 1.979090 |
-| 2028-02-29 | 2.0625 | 1.465753 | 0.93691579 | 1.932389 |
-| 2028-08-31 | 2.0625 | 1.969863 | 0.91415084 | 1.885436 |
-| 2028-08-31 | 100 (redemption) | 1.969863 | 0.91415084 | 91.415084 |
-| | | | **Dirty price** | **99.236175** |
+| 2027-02-28 | 2.0625 | 0.463014 | 0.98176432 | 2.024889 |
+| 2027-08-31 | 2.0625 | 0.967123 | 0.96025510 | 1.980526 |
+| 2028-02-29 | 2.0625 | 1.465753 | 0.93793394 | 1.934489 |
+| 2028-08-31 | 2.0625 | 1.969863 | 0.91546966 | 1.888156 |
+| 2028-08-31 | 100 (redemption) | 1.969863 | 0.91546966 | 91.546966 |
+| | | | **Dirty price** | **99.375025** |
 
-Subtract the 12 days of accrued interest, 0.136740, and the clean price is **99.099435**. The UI shows
+Subtract the 12 days of accrued interest, 0.136740, and the clean price is **99.238285**. The UI shows
 those two numbers in the Book table, and the Position's value is the dirty price times the quantity:
 
 $$
-\frac{99.236175}{100} \times 10{,}000{,}000 = 9{,}923{,}617.52 .
+\frac{99.375025}{100} \times 10{,}000{,}000 = 9{,}937{,}502.55 .
 $$
 
-Bump the curve down and up by a basis point, reprice, and the difference gives a DV01 of 0.0189473 per
-100, or **\$1,894.73** for the Position. Its buckets are:
+Bump the curve down and up by a basis point, reprice, and the difference gives a DV01 of 0.0189743 per
+100, or **\$1,897.43** for the Position. Its buckets are:
 
 | Pillar | Bucketed DV01 |
 |---|---|
 | 3M | +7.55 |
-| 1Y | +91.48 |
-| 2Y | +1,795.70 |
+| 1Y | +91.59 |
+| 2Y | +1,798.28 |
 | others | 0 |
 
 Almost all the risk sits in the 2Y bucket, where the redemption is. The two small entries are the
 coupons at 0.46 and 0.97 years: the first splits between 3M and 1Y, the second sits close to 1Y. Nothing
 reaches 3Y or beyond, because the bond's last cash flow is at 1.97 years, inside the 2Y triangle. The
-buckets sum to 1,894.73, the parallel DV01.
+buckets sum to 1,897.43, the parallel DV01.
 
 ### The whole Book
 
 ![The Book risk panel at Tick 24](img/04-tick24-book-risk.png)
 
-- **Book DV01 +20,702.** A 1bp parallel fall in zero rates gains the Book about \$20,702.
-- **By Instrument type:** the eight Treasury Positions carry +14,482 and are worth \$20,179,699; the two
-  futures carry −2,113 and are worth nothing (article 6); the five corporate bonds carry +6,194 of DV01
-  and the same again of [CS01](glossary.md#cs01) (article 7); the two swaps carry +2,138 on a value of
-  −\$56,048 (article 9).
+- **Book DV01 +25,384.** A 1bp fall in every zero curve gains the Book about \$25,384. The panel labels
+  it *all curves, 1bp each*: the Book prices off a dollar curve and a euro one, and +25,103 of that total
+  is the dollar curve's. Article 12 is about why those are listed apart.
+- **By Instrument type:** the eight Treasury Positions carry +14,593 and are worth \$20,259,289; the two
+  futures carry −2,124 and are worth nothing (article 6); the five corporate bonds carry +6,240 of DV01
+  and the same again of [CS01](glossary.md#cs01) (article 7); the two swaps carry +2,169 on a value of
+  −\$48,005 (article 9); the two FX forwards and the two swaptions are articles 12 and 13.
 - **The bucket chart** is the Book's shape, and it is nothing like a single number. Two buckets dominate:
-  **+16,714 at 10Y** and **−6,011 at 5Y**. The Book is long 10-year risk and short 5-year risk. A 1bp
+  **+24,020 at 10Y** and **−9,224 at 5Y**. The Book is long 10-year risk and short 5-year risk. A 1bp
   parallel move nets those against each other; a steepening does not.
 
 Where do those two buckets come from? Reading the Book table:
 
 | Position | | DV01 | Largest buckets |
 |---|---|---|---|
-| P05 | long 8mm 10Y note | +6,272 | 10Y +5,131, 7Y +585 |
-| P06 | long 3mm of the same note | +2,352 | (the same, scaled) |
-| P08 | long 4mm 30Y bond | +5,874 | 30Y +3,075, 20Y +1,375, 10Y +854 |
-| P03 | short 7.5mm 5Y note | −3,329 | 5Y −3,050 |
-| P16 | pay-fixed 5Y swap | −8,404 | 5Y −7,405, 3Y −949 |
-| P09 | short 6mm ZN future | −3,876 | 7Y −3,345, 5Y −334 |
+| P05 | long 8mm 10Y note | +6,307 | 10Y +5,162, 7Y +588 |
+| P06 | long 3mm of the same note | +2,365 | (the same, scaled) |
+| P08 | long 4mm 30Y bond | +5,932 | 30Y +3,112, 20Y +1,388, 10Y +860 |
+| P03 | short 7.5mm 5Y note | −3,340 | 5Y −3,060, 3Y −185 |
+| P16 | pay-fixed 5Y swap | −8,432 | 5Y −7,429, 3Y −952 |
+| P17 | receive-fixed 10Y swap | +10,601 | 10Y +6,958, 7Y +3,052 |
+| P09 | short 6mm ZN future | −3,893 | 7Y −3,360, 5Y −335 |
 
 The 5Y bucket is negative because two different Instruments are short 5-year risk: a short bond Position
 and a pay-fixed swap, which gains when rates rise. The 10Y bucket is positive mostly from the two
-Positions in the 10-year note, and the 30-year bond adds to 20Y and 30Y.
+Positions in the 10-year note and the receive-fixed 10-year swap, and the 30-year bond adds to 20Y and
+30Y.
 
 The short ZN future is the interesting one. It is the desk's hedge, and its risk lands mostly in the **7Y
-bucket** (−3,345), not the 10Y bucket, even though it is called a 10-year contract. The bond the future
+bucket** (−3,360), not the 10Y bucket, even though it is called a 10-year contract. The bond the future
 tracks matures in about 6.9 years, so the triangles put most of its risk at 7Y. A hedge chosen by DV01
 alone would look right; the buckets show it is hedging a slightly different part of the curve from the
 one the Book is long. Article 6 takes this apart.
