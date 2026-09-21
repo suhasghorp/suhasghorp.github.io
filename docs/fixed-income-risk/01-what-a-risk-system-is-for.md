@@ -317,53 +317,64 @@ Article 3 covers the two clocks.
 **② The USD Treasury curve.** The orange dots are the published par yields the curve was built from.
 The blue line is the engine's current zero curve, after 30 Ticks of simulated rate moves. The row
 beneath lists the zero rate at each [Pillar](glossary.md#pillar), the fixed tenors where risk is
-reported: 4.019% at 3 months, 4.906% at 10 years, 5.341% at 30 years. Article 2 builds this curve.
+reported: 3.932% at 3 months, 4.838% at 10 years, 5.296% at 30 years. Article 2 builds this curve.
 
 **③ Book risk.** The two headline numbers:
 
-- **Book DV01 +20,703.** If the whole zero curve falls one basis point, the Book gains about \$20,703. If
-  it rises, the Book loses about that much.
-- **Book CS01 +6,196.** The same for a one-basis-point fall in every corporate issuer's spread.
+- **Book DV01 +25,444.** If every zero curve falls one basis point, the Book gains about \$25,444. If they
+  rise, it loses about that much. The panel labels it *all curves, 1bp each*, and the label is doing real
+  work: the Book prices off two curves, a dollar one and a euro one, and a euro basis point is not a
+  dollar one. Almost all of it — +25,163 — is the USD curve's; the euro curve carries +281. Article 12
+  explains why those two numbers are listed separately and the total is labelled rather than trusted.
+- **Book CS01 +6,239.** The same for a one-basis-point fall in every corporate issuer's spread.
 
-The table below splits the Book by Instrument type. The eight Treasury Positions are worth \$20,179,699
-and carry DV01 +14,482. The two futures are worth zero but carry DV01 −2,113. The bar chart splits DV01
-across the Pillars. The Book is heavily exposed at 10 years (+16,714) and short at 5 years (−6,010), so a
+The table below splits the Book by Instrument type. The eight Treasury Positions are worth \$20,259,289
+and carry DV01 +14,593. The two futures are worth zero but carry DV01 −2,124. The bar chart splits DV01
+across the Pillars. The Book is heavily exposed at 10 years (+24,075) and short at 5 years (−9,223), so a
 steepening of the curve and a parallel shift affect it very differently. Article 4 explains Bucketed DV01.
 
 **④ The Book.** One row per Position: its Instrument, signed quantity, clean price, accrued interest,
 dirty value, DV01, CS01, and the Tick it was last priced. Short Positions show in red. P03 is short
-7.5 million of the 5-year note, worth −\$7,385,053 with DV01 −3,329. P09 is short 6 million of the ZN
-future: value 0, DV01 −3,876. The Book total is **\$32,826,883**.
+7.5 million of the 5-year note, worth −\$7,407,845 with DV01 −3,340. P09 is short 6 million of the ZN
+future: value 0, DV01 −3,893. The Book total is **\$33,654,215**.
 
 The last column is the one this series is about. At Tick 30:
 
 - most rows say *tick 24*, the last Day Rollover, when every Instrument is repriced;
-- two rows are highlighted and say *this tick*: P13, a Boreal Manufacturing bond, and P15, a Delmar
-  Logistics bond;
-- the strip above the table reads **2 / 16 Instruments** repriced this cycle.
+- two rows are highlighted and say *this tick*: P14, a Cascade Capital bond, and P19, an FX forward;
+- the strip above the table reads **2 / 20 Instruments** repriced this cycle.
 
-The market moved on every one of the six Ticks since the rollover, yet 14 of the 16 Instruments were
+The market moved on every one of the six Ticks since the rollover, yet 18 of the 20 Instruments were
 not repriced. None of their inputs had moved past its Materiality Threshold. The strip shows how far the
 unrepriced inputs have drifted, their [Staleness](glossary.md#staleness). For example, curve Pillars
-are at most 0.89bp from where their Instruments were last priced, against a 2bp threshold. For Boreal,
-the reason it did reprice is visible in the next panel: a new dealer Quote reset its Mark on this Tick.
-Article 5 is about this trade-off.
+are at most 1.89bp from where their Instruments were last priced, against a 2bp threshold. Article 5 is
+about this trade-off.
 
 **⑤ Credit Marks.** One row per corporate issuer: its [Rating Bucket](glossary.md#rating-bucket), how
 often its bonds trade, its current Mark, and the last observed trade report
 ([Print](glossary.md#print)) and dealer [Quote](glossary.md#quote). Two issuers trade about four
-times a simulated day. The other two barely trade at all. Neither Acme nor Delmar has printed yet, and
-Delmar has not even been quoted, so their Marks come from the model alone. Articles 7 and 8 cover credit.
+times a simulated day. The other two barely trade at all: neither Acme nor Delmar has printed yet, 30
+Ticks in, and the only evidence either has produced is a single dealer Quote. Articles 7 and 8 cover
+credit.
 
 **⑥ Interest rate swaps.** The two swaps: their notional, value, DV01, the current floating period, and
 its [Fixing](glossary.md#fixing), the floating rate already recorded for it. The pay-fixed swap P16
-has DV01 −8,404. It gains when rates rise, the opposite of a bond. Article 9 covers swaps.
+has DV01 −8,432. It gains when rates rise, the opposite of a bond. Article 9 covers swaps.
 
-**⑦ Treasury futures.** Each future's price, the [Proxy Bond](glossary.md#proxy-bond) standing in
+**⑦ FX forwards.** The two currency pairs and their rates — EURUSD at 1.1460, USDKRW at 1,382.62 with
+its forward points −149.53 — and the two contracts priced off them. P18 is a deliverable EUR/USD forward
+worth \$5,464; P19 a non-deliverable USD/KRW forward worth \$19,411. Article 12 covers them.
+
+**⑧ Swaptions.** Two options on swaps: the side each would exercise into, its strike against the
+[Forward Swap Rate](glossary.md#forward-swap-rate) that decides it, and the volatility it is priced at.
+P20's payer is struck at 4.8017% with the forward at 4.6913%, so it is out of the money and has 11 days
+to go. Article 13 covers them.
+
+**⑨ Treasury futures.** Each future's price, the [Proxy Bond](glossary.md#proxy-bond) standing in
 for its cheapest-to-deliver note, the conversion factor, and the [Basis](glossary.md#basis). Article 6
 covers futures.
 
-**⑧ Lifecycle events.** Coupons, redemptions and swap payments, processed at Day Rollover. At Tick 30
+**⑩ Lifecycle events.** Coupons, redemptions and swap payments, processed at Day Rollover. At Tick 30
 there are none yet. The first ones arrive later in the run, and article 3 follows them.
 
 !!! realdesk "What a real desk does differently"

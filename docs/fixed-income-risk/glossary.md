@@ -11,7 +11,7 @@ The terms of a contract (a bond, future, or swap), priced per unit of notional. 
 
 ### Position
 
-A signed quantity of one Instrument held in a Book. Several Positions can reference the same Instrument. For a swap, the quantity is its notional and is always positive; paying or receiving fixed is part of the Instrument.
+A signed quantity of one Instrument held in a Book. Several Positions can reference the same Instrument. Where the Instrument's own terms already say which side the holder is on — a swap paying or receiving fixed, an FX Forward buying or selling the base currency — the quantity is its notional and is always positive.
 
 ### Position Value
 
@@ -73,7 +73,7 @@ A simulated change of a future's Proxy Bond, together with a discrete jump in th
 
 ### Curve Source
 
-Where the day's starting Treasury curve came from: live, cached, or bundled.
+Where one currency's starting curve came from: live, cached, or bundled. Reported per currency, because each has its own publisher and they fall back independently. A Curve Source hands back a curve ready to discount with; whether that needed a bootstrap is its own business, not its caller's.
 
 ## Repricing
 
@@ -135,17 +135,43 @@ The flat Z-spread the risk engine prices all of an issuer's bonds with. It reset
 
 Carrying a Mark forward between observations using only the moves in the observable Systemic Factor and the issuer's Sector Factor.
 
+## FX
+
+### FX Forward
+
+An agreement to exchange two currency amounts on a future date at a rate agreed today. Deliverable: both legs settle in full.
+
+### NDF
+
+A forward on a currency that cannot be freely delivered, settled as a single net payment in the settlement currency rather than an exchange of both amounts.
+
+### FX Spot
+
+The current exchange rate for a currency pair, written base first and quoted in the second currency, and the Risk Factor every FX Position depends on. Unlike every other continuous factor in the engine, it does not mean-revert. The engine holds its logarithm, so a difference in the factor is a relative move.
+
+### Forward Points
+
+The difference between an NDF's quoted forward rate and FX Spot, simulated as its own Risk Factor. A deliverable forward has no Forward Points: its forward rate is derived from the two currencies' curves.
+
+### FX Fixing
+
+The exchange rate of a currency pair recorded on a fixing date. Once recorded it never changes, and it sets an NDF's settlement amount. Distinct from a Fixing, which sets a coupon.
+
+### Notional Currency
+
+The currency an FX Position's notional is denominated in, which need not be the currency it is valued in. It is part of the contract, because markets differ: a deliverable outright is struck on the pair's base amount, an NDF on the deliverable one it settles in.
+
 ## Sensitivities
 
 ### DV01
 
-The change in value for a 1bp parallel shift of the zero rates on the model's output curve.
+The change in value for a 1bp parallel shift of the zero rates on one currency's output curve, with every other curve held fixed. Reported per currency; a Book-level total across currencies is labelled "all curves, 1bp each", because a basis point of one currency's curve is not a basis point of another's.
 
 *In plain words:* How many dollars a Position gains if interest rates fall by one hundredth of a percent. The bigger the number, the more rate risk.
 
 ### Bucketed DV01
 
-DV01 measured by shifting the zero rate at a single Pillar, with the shift fading linearly to zero at the neighbouring Pillars.
+DV01 measured by shifting the zero rate at a single Pillar of one currency's curve, with the shift fading linearly to zero at the neighbouring Pillars.
 
 *In plain words:* DV01 split up by maturity, so you can see whether the rate risk sits in the 2-year, 10-year or 30-year part of the curve.
 
@@ -155,9 +181,51 @@ The change in value for a 1bp shift in an issuer's Mark.
 
 *In plain words:* Like DV01, but for credit spreads: how many dollars a Position gains if its issuer's spread tightens by one hundredth of a percent.
 
+### FX Delta
+
+The change in value for a 1% move in a currency against the Reporting Currency, reported per currency because exposures in different currencies do not net.
+
 ### Reporting Currency
 
-The currency all Book-level risk is expressed in (USD). Values in other currencies are converted at the current FX spot rate.
+The currency all Book-level value and risk is expressed in (USD). Values in other currencies are converted at FX Spot. Rates risk is reported per currency rather than converted, because a basis point of one currency's curve is not a basis point of another's.
+
+## Options
+
+### Swaption
+
+An option to enter a specified Interest Rate Swap on a single future date. European only: one Exercise Decision, on the Expiry date. Its terms are the Expiry plus the underlying swap, so the strike is that swap's fixed rate and paying or receiving fixed is that swap's direction.
+
+### Expiry
+
+The date a Swaption's Exercise Decision is made, and the date its underlying swap starts. Distinct from the underlying's maturity.
+
+### Exercise Decision
+
+Whether a Swaption was exercised, recorded once at the Day Rollover onto its Expiry and never revisited, even if rates move back through the strike afterwards. It is not a Lifecycle Event: it pays nothing, it changes what the Position is. An exercised Swaption is worth its underlying swap; an unexercised one is worth zero and stays in the Book.
+
+### Surface Point
+
+An (expiry, tenor) coordinate on the volatility surface, such as 1Mx5Y, at which a Normal Volatility is quoted. Every Swaption prices from exactly one, and only the points the Book needs exist.
+
+### Normal Volatility
+
+The volatility a Surface Point is quoted at, in basis points per annum, under the Bachelier model. It is the engine's first Risk Factor that no curve can produce: it is quoted by the market rather than derived from anything, and here it is simulated rather than observed.
+
+### Forward Swap Rate
+
+The fixed rate that would make a Swaption's underlying swap worth zero at Expiry, read off the curve. Compared against the strike, it is what the Exercise Decision turns on.
+
+### Annuity
+
+The discounted value of a swap's fixed-leg accruals per unit of notional. It is the factor a Swaption's value scales with, and the reason a swaption's price is quoted in the same units as the swap it exercises into.
+
+### Vega
+
+The change in value for a 1bp move in a Surface Point's Normal Volatility. Only Swaptions have it.
+
+### Gamma
+
+The change in DV01 for a 25bp parallel shift of the curve: how much an Instrument's rates risk moves when rates do. Reported with its shift size attached, because the number is meaningless without it. Distinct from a bond's convexity, which measures the curvature of a price already known in closed form.
 
 ## Risk stream
 

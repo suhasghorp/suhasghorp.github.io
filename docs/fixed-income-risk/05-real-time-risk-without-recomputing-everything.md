@@ -14,14 +14,20 @@
 
 ## The real-world problem
 
-Pricing one Instrument fully is not one calculation. In this engine it is **23**: one for the dirty value,
-twenty for the parallel DV01 and the nine Bucketed DV01s (each is a central difference, so two repricings
-each), and two more for [CS01](glossary.md#cs01).
+Pricing one Instrument fully is not one calculation. In this engine it is **57**. Every sensitivity is a
+central difference, so each one costs two valuations, and they add up fast: one valuation for the dirty
+value; forty-four for rates, being the parallel DV01, the nine Bucketed DV01s and the Gamma, in each of
+the two currencies the Book prices off; two for [CS01](glossary.md#cs01); four for FX Delta, one pair at a
+time; four for Vega, one Surface Point at a time; and two for the one non-deliverable pair's points delta.
 
-The demo's [Book](glossary.md#book) holds 16 Instruments, so repricing everything costs 368 valuations.
+That number is worth staring at, because nothing in it is waste. Each bump answers a different question,
+and the count grows with the number of *risk factors the Book is exposed to*, not with the number of
+Positions. It was 23 before the engine held a second currency and an option.
+
+The demo's [Book](glossary.md#book) holds 20 Instruments, so repricing everything costs 1,140 valuations.
 Once a second that is nothing. But the numbers a real desk faces are different in every direction:
 
-- thousands of Positions rather than seventeen, across many books;
+- thousands of Positions rather than twenty-one, across many books;
 - more risk factors per Instrument, so more bumps each;
 - market data arriving many times a second rather than once.
 
@@ -314,19 +320,20 @@ The Book panel's top strip is the engine explaining itself. At Tick 30:
 
 ![The Book panel's repricing telemetry at Tick 30](img/05-tick30-telemetry.png)
 
-- **2 / 16 Instruments** were repriced in this cycle. The other fourteen kept the prices they were last
+- **2 / 20 Instruments** were repriced in this cycle. The other eighteen kept the prices they were last
   given.
-- **Max Staleness, Pillar zero rate: 0.89bp of a 2bp threshold.** Somewhere in the Book an Instrument is
-  priced at a Pillar that has since moved 0.89bp. That is the worst case across the whole Book, and it
+- **Max Staleness, Pillar zero rate: 1.89bp of a 2bp threshold.** Somewhere in the Book an Instrument is
+  priced at a Pillar that has since moved 1.89bp. That is the worst case across the whole Book, and it
   cannot exceed 2bp.
-- The same for Marks (0.63bp of 1bp) and the Systemic Factor (0.60bp of 1bp).
+- The same for Marks (0.36bp of 1bp) and the Systemic Factor (0.67bp of 1bp).
 
-The Book table shows which two: the Boreal and Delmar corporate bonds are highlighted and read *this
-tick*, while every other row still reads *tick 24*, the last [Day Rollover](glossary.md#day-rollover).
+The Book table shows which two: the Cascade Capital corporate bond and the USD/KRW forward are
+highlighted and read *this tick*, while every other row still reads *tick 24*, the last
+[Day Rollover](glossary.md#day-rollover).
 
 ![The Book table at Tick 30: two rows repriced, the rest still priced at Tick 24](img/05-tick30-book.png)
 
-Compare that with Tick 24 itself, in [article 4](04-pricing-a-bond-and-measuring-its-risk.md): **16 / 16
+Compare that with Tick 24 itself, in [article 4](04-pricing-a-bond-and-measuring-its-risk.md): **20 / 20
 Instruments**, every Staleness **0.00bp**. A Day Rollover is a discrete factor move, so the entire Book is
 repriced and nothing is stale.
 
@@ -334,14 +341,22 @@ repriced and nothing is stale.
 
 Stepping the demo through its first 240 Ticks (ten simulated days) and counting:
 
-- **972 of 3,840 Instrument-Ticks were repriced: 25.3%.** Three quarters of the work never happened.
-- **41 Ticks repriced nothing at all.** The market moved on every one of them, but not enough.
-- **15 Ticks repriced all 16 Instruments.** Ten of those are the Day Rollovers; the rest are Ticks where a
+- **1,555 of 4,800 Instrument-Ticks were repriced: 32.4%.** Two thirds of the work never happened.
+- **Only 2 Ticks repriced nothing at all.** The market moved on every Tick, and with twenty Instruments
+  watching nine kinds of factor between them, it is now rare for *none* of them to be moved enough.
+- **16 Ticks repriced all 20 Instruments.** Ten of those are the Day Rollovers; the rest are Ticks where a
   Pillar crossed its threshold for everything at once.
-- **The largest Pillar Staleness over the whole run was 1.9995bp**, against the 2bp threshold. The bound
-  holds.
+- **The largest Pillar Staleness over the whole run was 1.9994bp**, against the 2bp threshold. The bound
+  holds — and so does every other one, each landing just under its own threshold and never over it.
 
-An average Tick repriced about 4 Instruments, or 93 valuations instead of 368.
+An average Tick repriced about 6.5 Instruments, or 369 valuations instead of 1,140.
+
+Those first two figures moved in opposite directions when the Book grew, and the reason is worth a
+sentence. The saving per Instrument barely changed: a Treasury note still reprices on about one Tick in
+six. What changed is that the Book now holds Positions whose factors move fast — an FX spot crosses its
+threshold on most Ticks — so the chance that *every* Instrument is quiet at once has collapsed. Idle Ticks
+are a property of a small Book, not of the technique. The technique's measure is the first bullet, and it
+held.
 
 Which Instruments reprice is not random:
 
@@ -350,13 +365,22 @@ Which Instruments reprice is not random:
 
 *Every Instrument reprices at least at the ten Day Rollovers in this run.*
 
-- **The liquid corporate bonds reprice most** (Boreal 125, Cascade 123). Their issuers trade about four
+- **The non-deliverable forward reprices most, on 212 Ticks of 240.** It watches an FX spot and a
+  Forward Points quote, both of which move a long way in an hour relative to their thresholds. The
+  deliverable forward (143) and the two swaptions (164 and 147) are close behind, for the same reason:
+  fast factors, not complicated ones.
+- **The liquid corporate bonds come next** (Cascade 118, Boreal 108). Their issuers trade about four
   times a simulated day, and each trade Print or dealer Quote resets the Mark, which is a 1bp-threshold
-  factor. Credit, not rates, drives their repricing (articles 7 and 8).
-- **The 10-year Treasury note (70) reprices far more than the 30-year bond (30).** Both depend on the same
-  kind of factor, but the short end moves more, and the 10-year note's material Pillars are 7Y and 10Y
-  against the 30-year bond's 10Y, 20Y and 30Y.
-- **The swaps and futures sit in between**, repricing 35 to 48 times.
+  factor. Credit, not rates, drives their repricing (articles 7 and 8). The two illiquid issuers'
+  bonds reprice far less (Acme 81 and 77, Delmar 70).
+- **The Treasuries reprice least, and in maturity order**: 45 for the 2-year note, falling one step at a
+  time to 36 for the 30-year bond. They all depend on the same kind of factor, and the short end moves
+  more, so the shorter the note the more often something material has happened to it.
+- **The swaps and futures sit with the Treasuries**, repricing 37 to 42 times.
+
+Read down that list and it is ordered by how fast an Instrument's factors move, not by how complicated
+the Instrument is. The swaptions are by far the hardest things in the Book to price and they are not at
+the top; the simplest contract in it, a one-month forward on a currency pair, is.
 
 ### The dependency sets
 
@@ -364,17 +388,26 @@ Measured after 240 Ticks, the Instruments declare exactly the factors they need:
 
 | Instrument | Dependencies |
 |---|---|
-| UST 4.125% 2028 (2Y) | 1Y, 2Y, Valuation Date |
-| UST 4.625% 2036 (10Y) | 7Y, 10Y, Valuation Date |
-| UST 5.125% 2056 (30Y) | 10Y, 20Y, 30Y, Valuation Date |
-| ZN Dec26 future | 5Y, 7Y, Basis, Proxy Bond, Valuation Date |
-| Pay-fixed 5Y swap | 3Y, 5Y, Valuation Date |
-| Acme 4.85% 2031 | 3Y, 5Y, Mark, Rating, Sector, Systemic, Valuation Date |
+| UST 4.125% 2028 (2Y) | USD 1Y, USD 2Y, Valuation Date |
+| UST 4.625% 2036 (10Y) | USD 7Y, USD 10Y, Valuation Date |
+| UST 5.125% 2056 (30Y) | USD 10Y, USD 20Y, USD 30Y, Valuation Date |
+| ZN Dec26 future | USD 5Y, USD 7Y, Basis ZNZ6, Proxy Bond ZNZ6, Valuation Date |
+| Pay-fixed 5Y swap | USD 3Y, USD 5Y, Valuation Date |
+| Acme 4.85% 2031 | USD 3Y, USD 5Y, Mark, Rating, Sector BBB Industrials, Systemic, Valuation Date |
+| EUR/USD 3M forward | USD 3M, EUR 3M, FX Spot EURUSD, Valuation Date |
+| USD/KRW 1M NDF | USD 3M, FX Spot USDKRW, Points USDKRW, Valuation Date |
+| 1Mx5Y payer swaption | USD 5Y, Vol 1Mx5Y, Valuation Date |
 
-Two things to notice. The 30-year bond depends on three Pillars and not on the 3M or 1Y ones, even though
-it pays a coupon in a few months' time: that exposure is below 5% of its Bucketed DV01. And Acme's Sector
-Factor dependency is to *BBB Industrials*, not the A Industrials it started in. Acme was downgraded at
-Tick 120, and its bonds' Dependencies were rewired in the same cycle. Article 8 is about that moment.
+Three things to notice. The 30-year bond depends on three Pillars and not on the 3M or 1Y ones, even
+though it pays a coupon in a few months' time: that exposure is below 5% of its Bucketed DV01. Acme's
+Sector Factor dependency is to *BBB Industrials*, not the A Industrials it started in — Acme was
+downgraded at Tick 120, and its bonds' Dependencies were rewired in the same cycle. Article 8 is about
+that moment.
+
+And every Pillar now carries a currency. The EUR/USD forward is the only Instrument in this Book that
+depends on Pillars of two curves at once, which is exactly what makes it a forward and not two separate
+trades. Everything else is a dollar Instrument that simply measures zero against the euro curve — the
+answer, not an omission.
 
 !!! realdesk "What a real desk does differently"
 
@@ -392,7 +425,7 @@ Tick 120, and its bonds' Dependencies were rewired in the same cycle. Article 8 
       market data and on each other.[^janestreet] Build systems add *early cutoff*: if recomputing a node
       gives the same answer, skip everything downstream.[^cutoff] A Materiality Threshold is the same
       instinct applied to inputs rather than outputs.
-    - **Adjoint differentiation instead of bumping.** The engine spends 20 of its 23 valuations on curve
+    - **Adjoint differentiation instead of bumping.** The engine spends 44 of its 57 valuations on curve
       bumps. Production engines get many sensitivities at once with adjoint (reverse-mode) algorithmic
       differentiation, which computes the sensitivities of a few outputs to many inputs for a cost of
       roughly one pricing.[^aad] That changes the arithmetic of this article completely, and it composes
