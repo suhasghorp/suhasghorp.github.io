@@ -204,7 +204,7 @@ A Treasury bond prices itself by summing discounted cash flows. It never sees a 
         double value = 0;
         for (CashFlow cashFlow : cashFlows()) {
             if (cashFlow.date().isAfter(valuationDate)) {
-                value += cashFlow.amount() * market.curve().discountFactor(
+                value += cashFlow.amount() * market.curve(currency()).discountFactor(
                         YearFractions.act365(valuationDate, cashFlow.date()));
             }
         }
@@ -239,24 +239,33 @@ value minus it:
 The sensitivity calculator knows nothing about bonds. It asks for a dirty value on a bumped market, which
 is why the same code produces DV01 for futures and swaps:
 
-```java title="SensitivityCalculator.java" linenums="30"
-    public CurveSensitivities curveSensitivities(Instrument instrument, MarketState market) {
-        double dv01 = bumpAndReprice(instrument, market, t -> ONE_BP);
+```java title="SensitivityCalculator.java" linenums="60"
+    /** Risk in one currency: that currency's curve bumped, every other curve held fixed. */
+    public CurveSensitivities curveSensitivities(Instrument instrument, MarketState market, String currency) {
+        double dv01 = bumpAndReprice(instrument, market, currency, t -> ONE_BP);
         double[] bucketed = new double[pillars.size()];
         for (int i = 0; i < pillars.size(); i++) {
             int pillar = i;
-            bucketed[i] = bumpAndReprice(instrument, market, t -> ONE_BP * weight(pillar, t));
+            bucketed[i] = bumpAndReprice(instrument, market, currency, t -> ONE_BP * weight(pillar, t));
         }
-        return new CurveSensitivities(dv01, bucketed);
+        // Gamma: the same measurement taken again from a curve shifted up, minus the one just taken.
+        double shifted = bumpAndReprice(instrument, bumped(market, currency, t -> GAMMA_SHIFT), currency,
+                t -> ONE_BP);
+        return new CurveSensitivities(dv01, bucketed, shifted - dv01 + 0.0);
     }
 ```
 
-[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/risk/SensitivityCalculator.java#L30-L38)
+[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/risk/SensitivityCalculator.java#L60-L72)
 
-The parallel DV01 and each bucket differ only in the shift passed in. The triangular weight is the formula
-box above, written out:
+The parallel DV01 and each bucket differ only in the shift passed in. Two details in that method belong
+to later articles and can be read past here: the `currency` argument, which is how a Book holding more
+than one curve bumps them one at a time (article 12), and `gamma`, which is the same DV01 measured a
+second time from a shifted curve and matters only once the Book holds an option (article 13). For a
+Treasury bond, one curve and one measurement is the whole of it.
 
-```java title="SensitivityCalculator.java" linenums="45"
+The triangular weight is the formula box above, written out:
+
+```java title="SensitivityCalculator.java" linenums="79"
     double weight(int i, double t) {
         double here = pillars.get(i).years();
         if (t <= here) {
@@ -274,7 +283,7 @@ box above, written out:
     }
 ```
 
-[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/risk/SensitivityCalculator.java#L45-L59)
+[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/risk/SensitivityCalculator.java#L79-L93)
 
 The bump itself scales discount factors, and its Javadoc records why the curve is what gets bumped:
 
@@ -300,11 +309,11 @@ record BumpedCurve(YieldCurve base, DoubleUnaryOperator shift) implements YieldC
 Scaling to a Position is a multiplication, with one wrinkle: a short Position's empty buckets would
 otherwise come out as negative zero, which looks odd on screen:
 
-```java title="CurveSensitivities.java" linenums="22"
+```java title="CurveSensitivities.java" linenums="30"
     /** A Position's risk: this per-unit risk times its signed quantity. */
     public CurveSensitivities scaledBy(double quantity) {
         return new CurveSensitivities(scale(dv01, quantity),
-                Arrays.stream(bucketedDv01).map(b -> scale(b, quantity)).toArray());
+                Arrays.stream(bucketedDv01).map(b -> scale(b, quantity)).toArray(), scale(gamma, quantity));
     }
 
     /** Adding 0.0 turns the −0 of a short Position's empty bucket into 0. */
@@ -313,7 +322,7 @@ otherwise come out as negative zero, which looks odd on screen:
     }
 ```
 
-[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/risk/CurveSensitivities.java#L22-L31)
+[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/risk/CurveSensitivities.java#L30-L39)
 
 ## See it running
 

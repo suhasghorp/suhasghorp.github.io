@@ -230,7 +230,7 @@ it automatically:
     }
 ```
 
-[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/instrument/CorporateBond.java#L63-L78)
+[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/instrument/CorporateBond.java#L63-L79)
 
 And the Print burst is a function of how long ago the event was:
 

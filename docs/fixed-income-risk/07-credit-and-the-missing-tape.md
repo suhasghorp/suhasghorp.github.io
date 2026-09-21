@@ -178,7 +178,7 @@ A corporate bond prices itself exactly like a Treasury, with one extra factor pe
         for (CashFlow cashFlow : cashFlows()) {
             if (cashFlow.date().isAfter(valuationDate)) {
                 double t = YearFractions.act365(valuationDate, cashFlow.date());
-                value += cashFlow.amount() * market.curve().discountFactor(t) * Math.exp(-spread * t);
+                value += cashFlow.amount() * market.curve(currency()).discountFactor(t) * Math.exp(-spread * t);
             }
         }
         return value;

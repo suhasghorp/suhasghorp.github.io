@@ -211,7 +211,7 @@ runtime without any extra bookkeeping.
 
 Thresholds are per factor type, and the discrete types return zero, so any change exceeds them:
 
-```java title="MaterialityThresholds.java" linenums="25"
+```java title="MaterialityThresholds.java" linenums="39"
     /** The threshold for a factor type. Discrete factors have none: any change is a move. */
     public double threshold(FactorType type) {
         return switch (type) {
@@ -219,29 +219,33 @@ Thresholds are per factor type, and the discrete types return zero, so any chang
             case MARK -> markBp;
             case SYSTEMIC, SECTOR -> creditIndexBp;
             case BASIS -> basisPoints;
+            case FX_SPOT -> fxSpotPercent;
+            case NDF_POINTS -> ndfPointsPips;
+            case NORMAL_VOL -> normalVolBp;
             case RATING, PROXY_BOND, VALUATION_DATE -> 0;
         };
     }
 ```
 
-[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/repricing/MaterialityThresholds.java#L25-L34)
+[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/repricing/MaterialityThresholds.java#L39-L51)
 
 Narrowing the curve Dependencies to material Pillars is a filter on the Instrument's declared factors,
 using the sensitivities that have just been computed anyway:
 
-```java title="MaterialDependencies.java" linenums="32"
-    public static Set<RiskFactorId> of(Set<RiskFactorId> declared, List<Pillar> pillars, CurveSensitivities perUnit,
+```java title="MaterialDependencies.java" linenums="31"
+    public static Set<RiskFactorId> of(Set<RiskFactorId> declared, List<Pillar> pillars, RatesSensitivities perUnit,
                                        double minShare) {
-        double[] buckets = perUnit.bucketedDv01();
-        double total = Arrays.stream(buckets).map(Math::abs).sum();
+        // Measured against the Instrument's whole rates exposure, so a Pillar in the currency it barely
+        // touches is immaterial for the reason it should be: the exposure there is small.
+        double total = perUnit.totalAbsoluteBucketedDv01();
         Set<RiskFactorId> material = new LinkedHashSet<>();
         for (RiskFactorId factor : declared) {
             if (factor.type() != FactorType.PILLAR_ZERO_RATE) {
                 material.add(factor);
                 continue;
             }
-            int bucket = indexOf(pillars, factor.name());
-            if (total > 0 && Math.abs(buckets[bucket]) / total >= minShare) {
+            double bucket = perUnit.in(factor.currency()).bucketedDv01()[indexOf(pillars, factor.name())];
+            if (total > 0 && Math.abs(bucket) / total >= minShare) {
                 material.add(factor);
             }
         }
@@ -249,12 +253,12 @@ using the sensitivities that have just been computed anyway:
     }
 ```
 
-[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/repricing/MaterialDependencies.java#L32-L48)
+[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/repricing/MaterialDependencies.java#L31-L48)
 
 A repricing cycle then filters the Book, prices the dirty Instruments, and records both their new
 Dependencies and the factor values they were priced at:
 
-```java title="RiskSession.java" linenums="178"
+```java title="RiskSession.java" linenums="266"
     private List<PositionResult> reprice(MarketTicks ticks) {
         priced = ticks.latest();
         MarketState market = priced.market();
@@ -269,7 +273,7 @@ Dependencies and the factor values they were priced at:
         }
 ```
 
-[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/session/RiskSession.java#L178-L189)
+[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/session/RiskSession.java#L266-L277)
 
 Only Positions whose Instrument was repriced are recomputed, and the Book rollups are rebuilt only if
 something changed.

@@ -302,33 +302,56 @@ simulated day is complete:
 [View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/simulation/SimulationClock.java#L24-L32)
 
 `MarketSimulator.advance` puts the pieces together, in order. It moves the clock, draws the Tick's
-correlated shocks, and steps the short rate, the futures Basis and the credit factors. Only on a Day
-Rollover does it process the cash flows that fell due and record the day's Fixings. Then it publishes the
-new market state:
+correlated shocks, and hands each one to the factor it belongs to: the short rate of every currency, then
+the futures Basis and the credit factors. Only on a Day Rollover does it process the cash flows that fell
+due and record the day's Fixings. Then it publishes the new market state:
 
-```java title="MarketSimulator.java" linenums="118"
+```java title="MarketSimulator.java" linenums="166"
     MarketTick advance() {
         if (!canAdvance()) {
             throw new IllegalStateException("The simulation is stopped at tick " + clock.tick());
         }
         SimulationClock.Step step = clock.advance();
         CorrelatedShockGenerator.Shocks tickShocks = shocks.next(random, futures.size());
-        shortRate.advance(step.dt(), tickShocks.shortRate());
-        List<CtdSwitchEvent> switches = ctdSwitchEvents(futuresBasis.advance(step.dt(), tickShocks.basis(), random));
-        creditFactors.advance(clock.tick(), step.dt(), tickShocks.systemic(), random);
+        // Each currency's short rate takes its own named shock, so two curves are correlated rather than
+        // identical; each pair's spot and points likewise.
+        shortRates.forEach((currency, rate) ->
+                rate.advance(step.dt(), tickShocks.of(SessionConfig.shortRateFactor(currency))));
+        fxSpots.forEach((pair, spot) ->
+                spot.advance(step.dt(), tickShocks.of(config.fxPairs().get(pair).spotShockFactor())));
+        ndfPoints.forEach((pair, points) ->
+                points.advance(step.dt(), tickShocks.of(config.fxPairs().get(pair).pointsShockFactor())));
+        // Each Surface Point likewise: its own named shock, so two points are correlated only through
+        // whatever the matrix says, and today it says nothing at all.
+        config.surfacePoints().points().forEach(point ->
+                normalVols.get(point.label()).advance(step.dt(), tickShocks.of(point.volShockFactor())));
+        List<CtdSwitchEvent> switches =
+                ctdSwitchEvents(futuresBasis.advance(clock.tick(), step.dt(), tickShocks.basis(), random));
+        creditFactors.advance(clock.tick(), step.dt(), tickShocks.of("systemic"), random);
         marker.update(clock.tick(), creditFactors.observables(), creditObservations.advance(step.dt(), random));
         List<LifecycleEvent> events = step.isDayRollover()
                 ? lifecycleEvents(step.previousValuationDate(), step.valuationDate())
                 : List.of();
         if (step.isDayRollover()) {
             recordFixings();
+            recordFxFixings();
+            // In this order: a Swaption's Exercise Decision is read off its underlying's Forward Swap
+            // Rate, and on the Expiry that swap's first floating period is already running, so its
+            // Fixing has to exist before the rate can be computed.
+            recordSwaptionFixings();
+            recordExerciseDecisions();
         }
         market = currentMarket();
         return tick(step.isDayRollover(), events, switches, tickShocks);
     }
 ```
 
-[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/session/MarketSimulator.java#L118-L136)
+[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/session/MarketSimulator.java#L166-L202)
+
+The middle of that method has more movers in it than this article has introduced: FX spot and forward
+points, and a Normal Volatility per Surface Point. They arrive in articles 12 and 13, and they are worth
+seeing here anyway, because they are all the same shape — a factor, its own named shock out of the Tick's
+draw, and one `advance` call. Adding an asset class to this engine means adding a line here.
 
 `MarketSimulator` never prices anything. It only moves the market and publishes it, which is what lets it
 run on its own thread in article 11.

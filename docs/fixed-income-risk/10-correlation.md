@@ -153,10 +153,11 @@ flowchart LR
 The matrix validates itself on construction, and the Cholesky routine doubles as the positive-definiteness
 check:
 
-```java title="CorrelationMatrix.java" linenums="77"
-    private static double[][] cholesky(double[][] a) {
-        double[][] l = new double[SIZE][SIZE];
-        for (int i = 0; i < SIZE; i++) {
+```java title="CorrelationMatrix.java" linenums="124"
+    private static double[][] cholesky(List<String> factors, double[][] a) {
+        int size = factors.size();
+        double[][] l = new double[size][size];
+        for (int i = 0; i < size; i++) {
             for (int j = 0; j <= i; j++) {
                 double sum = a[i][j];
                 for (int k = 0; k < j; k++) {
@@ -164,7 +165,7 @@ check:
                 }
                 if (i == j) {
                     if (sum <= TOLERANCE) {
-                        throw invalid("must be positive definite", a);
+                        throw invalid(factors, "must be positive definite", a);
                     }
                     l[i][i] = Math.sqrt(sum);
                 } else {
@@ -176,26 +177,45 @@ check:
     }
 ```
 
-[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/model/CorrelationMatrix.java#L77-L96)
+[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/model/CorrelationMatrix.java#L124-L144)
 
 Generating a Tick's shocks is then three lines of arithmetic on rows of $L$:
 
-```java title="CorrelatedShockGenerator.java" linenums="26"
-    /** Draws the next tick's shocks, in a fixed order: short rate, Systemic, then one per futures contract. */
+```java title="CorrelatedShockGenerator.java" linenums="44"
+    /**
+     * Draws the next tick's shocks in a fixed order: one independent draw per singleton factor, in matrix
+     * order, then one per futures contract.
+     */
     public Shocks next(RandomGenerator random, int futuresContracts) {
-        double e0 = random.nextGaussian();
-        double e1 = random.nextGaussian();
-        double shortRate = shortRateRow[0] * e0;
-        double systemic = systemicRow[0] * e0 + systemicRow[1] * e1;
-        List<Double> basis = new ArrayList<>(futuresContracts);
-        for (int i = 0; i < futuresContracts; i++) {
-            basis.add(basisRow[0] * e0 + basisRow[1] * e1 + basisRow[2] * random.nextGaussian());
+        double[] independent = new double[singletons.size()];
+        for (int i = 0; i < independent.length; i++) {
+            independent[i] = random.nextGaussian();
         }
-        return new Shocks(shortRate, systemic, basis);
+        Map<String, Double> byFactor = new LinkedHashMap<>();
+        for (int i = 0; i < singletons.size(); i++) {
+            double[] row = correlations.choleskyRow(singletons.get(i));
+            double shock = 0;
+            for (int k = 0; k <= i; k++) {
+                shock += row[k] * independent[k];
+            }
+            byFactor.put(singletons.get(i), shock);
+        }
+        List<Double> basis = new ArrayList<>(futuresContracts);
+        if (hasBasis) {
+            int own = singletons.size();
+            for (int c = 0; c < futuresContracts; c++) {
+                double shock = 0;
+                for (int k = 0; k < own; k++) {
+                    shock += basisRow[k] * independent[k];
+                }
+                basis.add(shock + basisRow[own] * random.nextGaussian());
+            }
+        }
+        return new Shocks(byFactor, basis);
     }
 ```
 
-[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/model/CorrelatedShockGenerator.java#L26-L37)
+[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/model/CorrelatedShockGenerator.java#L44-L74)
 
 Each futures contract gets its own third draw, so two contracts have the configured correlations with
 rates and credit, and are correlated with each other only through those. The draws come from the session's

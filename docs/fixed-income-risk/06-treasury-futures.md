@@ -213,7 +213,7 @@ carry the risk, so this costs nothing in practice.
 The Basis and the switches are simulated together. The Basis is an Ornstein-Uhlenbeck process stepped the
 same way as the short rate, and the switch is a Poisson draw that also jumps the Basis:
 
-```java title="FuturesBasisSimulator.java" linenums="46"
+```java title="FuturesBasisSimulator.java" linenums="53"
         double switchProbability = 1 - Math.exp(-parameters.ctdSwitchIntensity() * dt);
         List<CtdSwitch> switches = new ArrayList<>();
         int index = 0;
@@ -224,7 +224,21 @@ same way as the short rate, and the switch is a Poisson draw that also jumps the
                     + parameters.meanReversion() * (parameters.longRunMean() - current.basis()) * dt
                     + parameters.volatility() * Math.sqrt(dt) * shock;
             int proxyIndex = current.proxyIndex();
-            if (random.nextDouble() < switchProbability) {
+            boolean drawn = random.nextDouble() < switchProbability;
+            Optional<ScheduledCtdSwitch> scheduled = parameters.scheduledAt(contract.getKey(), tick);
+            if (scheduled.isPresent()) {
+                int to = scheduled.get().proxyIndex();
+                if (to >= contract.getValue()) {
+                    throw new IllegalArgumentException("Scheduled CTD Switch for " + contract.getKey()
+                            + " names Proxy Bond " + (to + 1) + ", but it has only " + contract.getValue());
+                }
+                if (to != proxyIndex) {
+                    double jump = parameters.ctdSwitchJump();
+                    switches.add(new CtdSwitch(contract.getKey(), proxyIndex, to, jump));
+                    proxyIndex = to;
+                    basis += jump;
+                }
+            } else if (drawn) {
                 int to = random.nextInt(contract.getValue() - 1);
                 to = to >= proxyIndex ? to + 1 : to;
                 double jump = random.nextBoolean() ? parameters.ctdSwitchJump() : -parameters.ctdSwitchJump();
@@ -236,7 +250,7 @@ same way as the short rate, and the switch is a Poisson draw that also jumps the
         }
 ```
 
-[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/model/FuturesBasisSimulator.java#L46-L65)
+[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/model/FuturesBasisSimulator.java#L53-L86)
 
 The Basis shock is correlated with the short-rate shock (article 10), so the Basis and the curve do not
 wander independently.

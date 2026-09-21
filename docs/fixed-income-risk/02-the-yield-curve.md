@@ -413,30 +413,30 @@ interpolator's derivative.
 Finally, the Curve Source chain is a plain try-and-fall-back. A failed cache write is logged but never
 allowed to fail a successful live fetch:
 
-```java title="TreasuryCurveSource.java" linenums="25"
+```java title="TreasuryCurveSource.java" linenums="31"
     @Override
     public CurveSnapshot load() {
         try {
             ParCurve curve = live.fetchLatest();
             cacheQuietly(curve);
             log.info("Curve Source LIVE: Treasury par curve for {}", curve.curveDate());
-            return new CurveSnapshot(curve, CurveSourceKind.LIVE);
+            return CurveSnapshot.of(curve, CurveSourceKind.LIVE);
         } catch (CurveUnavailableException liveFailure) {
             Optional<ParCurve> cached = cache.read();
             if (cached.isPresent()) {
                 log.warn("Live curve fetch failed ({}); Curve Source CACHED: par curve for {}",
                         liveFailure.getMessage(), cached.get().curveDate());
-                return new CurveSnapshot(cached.get(), CurveSourceKind.CACHED);
+                return CurveSnapshot.of(cached.get(), CurveSourceKind.CACHED);
             }
             CurveSnapshot fallback = bundled.load();
             log.warn("Live curve fetch failed ({}) and no usable cache at {}; Curve Source {}: par curve for {}",
-                    liveFailure.getMessage(), cache.file(), fallback.source(), fallback.curve().curveDate());
+                    liveFailure.getMessage(), cache.file(), fallback.source(), fallback.curveDate());
             return fallback;
         }
     }
 ```
 
-[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/curve/TreasuryCurveSource.java#L25-L44)
+[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/curve/TreasuryCurveSource.java#L31-L50)
 
 With `risk.curve.source=bundled`, as in the `demo` profile, the engine skips this class and loads the
 bundled snapshot directly, touching neither the network nor the cache.

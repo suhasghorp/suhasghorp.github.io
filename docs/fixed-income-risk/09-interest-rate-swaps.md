@@ -134,38 +134,47 @@ Positions in the 5Y bucket.
 
 ## How the system does it
 
-The valuation is the formula box, written out. Note the branch: a current period gets its recorded Fixing,
-and a swap that has not started yet is pure par trick.
+The valuation is the formula box, written out — and it reads like the box, because each half of it has a
+name. The floating leg over the fixed rate times the Annuity, signed for whichever side this swap is:
 
 ```java title="InterestRateSwap.java" linenums="103"
     /** Value per unit of notional to this swap's holder: floating leg minus fixed leg for the fixed payer. */
     @Override
     public double dirtyValue(MarketState market) {
-        LocalDate valuationDate = market.valuationDate();
-        if (!maturityDate.isAfter(valuationDate)) {
+        if (!maturityDate.isAfter(market.valuationDate())) {
             return 0;
         }
-        double fixed = 0;
-        for (Period period : fixedPeriods()) {
-            if (period.end().isAfter(valuationDate)) {
-                fixed += fixedRate * fixedAccrual(period) * discountFactor(market, period.end());
-            }
-        }
-        double floating;
-        Optional<Period> current = currentFloatingPeriod(valuationDate);
-        if (current.isPresent()) {
-            Period period = current.get();
-            double fixing = market.fixings().rate(period.start());
-            floating = fixing * floatingAccrual(period) * discountFactor(market, period.end())
-                    + discountFactor(market, period.end()) - discountFactor(market, maturityDate);
-        } else {
-            floating = discountFactor(market, effectiveDate) - discountFactor(market, maturityDate);
-        }
-        return direction.sign * (floating - fixed);
+        return direction.sign * (floatingLegValue(market) - fixedRate * annuity(market));
     }
 ```
 
-[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/instrument/InterestRateSwap.java#L103-L127)
+[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/instrument/InterestRateSwap.java#L103-L110)
+
+The *Annuity* is the discounted sum of the remaining fixed accruals — the thing the fixed rate multiplies.
+Naming it costs nothing here and earns its keep twice over: it is also the denominator of the Forward Swap
+Rate, and the factor a swaption's value scales with.
+
+The branch the formula box warned about lives in the floating leg. A period already running gets its
+recorded Fixing; a swap that has not started yet is pure par trick, with no Fixing needed at all:
+
+```java title="InterestRateSwap.java" linenums="144"
+    /**
+     * The floating leg per unit of notional. The current period's coupon is known from its Fixing; the
+     * rest telescope to P(start) − P(end), which is why a forward-starting swap needs no Fixing at all.
+     */
+    private double floatingLegValue(MarketState market) {
+        Optional<Period> current = currentFloatingPeriod(market.valuationDate());
+        if (current.isEmpty()) {
+            return discountFactor(market, effectiveDate) - discountFactor(market, maturityDate);
+        }
+        Period period = current.get();
+        double fixing = market.fixings().rate(period.start());
+        return fixing * floatingAccrual(period) * discountFactor(market, period.end())
+                + discountFactor(market, period.end()) - discountFactor(market, maturityDate);
+    }
+```
+
+[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/instrument/InterestRateSwap.java#L144-L157)
 
 The Fixing store is deliberately dull. `record` refuses to overwrite, and `indexRate` derives a rate from
 a curve only when a new Fixing is being set:
@@ -185,15 +194,15 @@ a curve only when a new Fixing is being set:
     }
 
     /**
-     * The index rate for {@code resetDate} implied by {@code market}'s curve: the simple ACT/360 forward rate
-     * from the reset date to three months later. For a reset date before the Valuation Date, as when
-     * seeding a period already running at startup, the curve is extended backwards at its short rate,
-     * since a curve starting today cannot see the past.
+     * The index rate for {@code resetDate} implied by {@code currency}'s curve in {@code market}: the simple
+     * ACT/360 forward rate from the reset date to three months later. For a reset date before the Valuation
+     * Date, as when seeding a period already running at startup, the curve is extended backwards at its
+     * short rate, since a curve starting today cannot see the past.
      */
-    public static double indexRate(MarketState market, LocalDate resetDate) {
+    public static double indexRate(MarketState market, String currency, LocalDate resetDate) {
         LocalDate end = resetDate.plusMonths(INDEX_TENOR_MONTHS);
         double accrual = ChronoUnit.DAYS.between(resetDate, end) / 360.0;
-        return (discountFactor(market, resetDate) / discountFactor(market, end) - 1) / accrual;
+        return (discountFactor(market, currency, resetDate) / discountFactor(market, currency, end) - 1) / accrual;
     }
 ```
 
@@ -202,18 +211,19 @@ a curve only when a new Fixing is being set:
 New Fixings are recorded only at a [Day Rollover](glossary.md#day-rollover) that lands on a reset date,
 which keeps them on the calendar clock of article 3:
 
-```java title="MarketSimulator.java" linenums="208"
+```java title="MarketSimulator.java" linenums="298"
     private void recordFixings() {
-        MarketState today = new MarketState(clock.valuationDate(), shortRate.curve());
+        MarketState today = new MarketState(clock.valuationDate(), curves());
         for (InterestRateSwap swap : swaps) {
             if (swap.resetDates().contains(today.valuationDate())) {
-                fixingHistory.record(today.valuationDate(), FixingHistory.indexRate(today, today.valuationDate()));
+                fixingHistory.record(today.valuationDate(),
+                        FixingHistory.indexRate(today, swap.currency(), today.valuationDate()));
             }
         }
     }
 ```
 
-[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/session/MarketSimulator.java#L208-L215)
+[View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/session/MarketSimulator.java#L298-L306)
 
 ## See it running
 

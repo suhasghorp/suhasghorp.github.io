@@ -210,12 +210,14 @@ public record Book(List<Position> positions) {
 
 [View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/java/com/fixedincomerisk/book/Book.java#L7-L19)
 
-The sample Book is a CSV file of 17 Positions in 16 Instruments. The Instruments are:
+The sample Book is a CSV file of 21 Positions in 20 Instruments. The Instruments are:
 
 - seven real on-the-run US Treasury notes and bonds, from two to 30 years;
 - two Treasury futures, the 10-year (ZN) and the 5-year (ZF);
 - five bonds from four fictional corporate issuers;
-- two interest rate swaps.
+- two interest rate swaps;
+- two FX forwards, one deliverable and one non-deliverable;
+- two swaptions.
 
 An excerpt:
 
@@ -233,14 +235,27 @@ P09,ZNZ6,-6000000
 ...
 P16,IRS-5Y-PAY,20000000
 P17,IRS-10Y-REC,15000000
+# FX Forwards: quantity is the notional in the Instrument's Notional Currency, EUR then USD.
+P18,FXF-EURUSD-3M,10000000
+P19,NDF-USDKRW-1M,5000000
+...
+P20,SWPN-1Mx5Y-PAY,25000000
+P21,SWPN-1Yx10Y-REC,20000000
 ```
 
 [View on GitHub](https://github.com/suhasghorp/fixed-income-risk-engine/blob/series-v1/backend/src/main/resources/refdata/book.csv)
 
 The Instruments are identified the way a desk would identify them. Treasuries by their real CUSIPs
 (`91282CRH6` is the 2-year note issued on 31 August 2026). Futures by their exchange codes
-(`ZNZ6` is the December 2026 10-year note future). Corporates and swaps by descriptive ids. P05 and P06
-are the two Positions in the same 10-year note.
+(`ZNZ6` is the December 2026 10-year note future). Corporates, swaps, forwards and swaptions by
+descriptive ids. P05 and P06 are the two Positions in the same 10-year note, which is why 21 Positions
+hold only 20 Instruments.
+
+The first seventeen Positions are the Book this series builds through article 11, and every number in
+articles 1 to 11 is measured on the whole of it. The last four arrive with the two articles that explain
+them — the forwards in article 12, the swaptions in article 13 — and they are in the file from the start
+rather than appearing halfway through, because a Book that changes shape between articles would make the
+figures impossible to compare.
 
 Around this small model sits the rest of the engine. It is a pipeline from market data to a browser:
 
