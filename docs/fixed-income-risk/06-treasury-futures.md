@@ -257,12 +257,14 @@ wander independently.
 
 ## See it running
 
-In the demo, the ZN contract switches its CTD at **Tick 878**. Stop just after it:
+In the demo, the ZN contract switches its CTD at **Tick 878**. That one is scheduled rather than drawn —
+the demo profile sets `risk.futures.ctd-switch.scheduled=ZNZ6@878:CTD3` — so this article has a moment
+that stays where it is. Every other switch in the run is a genuine Poisson draw. Stop four Ticks after it:
 
 ```bash
 # Terminal 1: the engine, stopped just after the ZN CTD Switch
 cd backend && mvn spring-boot:run -Dspring-boot.run.profiles=demo \
-    -Dspring-boot.run.arguments=--risk.simulation.stop-at-tick=880
+    -Dspring-boot.run.arguments=--risk.simulation.stop-at-tick=882
 
 # Terminal 2: the UI, then open http://localhost:5173
 cd frontend && npm install && npm run dev
@@ -270,58 +272,65 @@ cd frontend && npm install && npm run dev
 
 At one Tick per second that takes about 15 minutes.
 
-![The Treasury futures panel at Tick 880, just after the ZN CTD Switch](img/06-tick880-futures.png)
+![The Treasury futures panel at Tick 882, just after the ZN CTD Switch](img/06-tick882-futures.png)
 
-The ZN row now shows a **CTD Switch** badge, the Proxy Bond is the 4.000% note of February 2034, and the
-recent-switches table records all three switches of the run so far: ZF at Ticks 275 and 458, ZN at
-Tick 878, each with its ±0.150 Basis jump.
+The ZN row still shows a **CTD Switch** badge, which stays up for ten Ticks, and the Proxy Bond is the
+4.000% note of February 2034. The recent-switches table records all six switches of the run: ZN at Ticks
+257, 287 and 449, ZF at 597 and 659, and the scheduled ZN switch at 878. Each moved the Basis by 0.150,
+and the sign is the giveaway — the five drawn switches came out negative, and the scheduled one is
+positive by construction.
 
 ### The price, taken apart
 
-Two Ticks are worth comparing: Tick 875, the last time the future was priced before the switch, and
+Two Ticks are worth comparing: Tick 870, the last time the future was priced before the switch, and
 Tick 878, the switch itself.
 
-| | Tick 875 | Tick 878 |
+| | Tick 870 | Tick 878 |
 |---|---|---|
-| Proxy Bond | UST 4.125% 08/15/2033 | UST 4.000% 02/15/2034 |
-| Its clean price | 93.8426 | 92.5639 |
-| Conversion factor | 0.9003 | 0.8870 |
-| Clean price ÷ CF | 104.2348 | 104.3561 |
-| Basis (price points) | −0.1974 | −0.0324 |
-| **Futures price** | **104.0374** | **104.3237** |
+| Proxy Bond | UST 4.250% 11/15/2033 | UST 4.000% 02/15/2034 |
+| Its clean price | 96.4023 | 94.9463 |
+| Conversion factor | 0.9040 | 0.8870 |
+| Clean price ÷ CF | 106.6397 | 107.0421 |
+| Basis (price points) | −0.4632 | −0.3152 |
+| **Futures price** | **106.1765** | **106.7269** |
 
-Both bottom rows are exactly what the Book table shows for Position P09. The price moved by 0.29 points,
-and almost all of that is the Basis jumping 0.165 points: +0.150 from the switch itself plus its ordinary
-drift.
+Both bottom rows are exactly what the Book table shows for Position P09. The price moved by 0.550 points,
+and it is worth seeing which part did what. The Basis contributed +0.148: the switch's +0.150 less a
+little ordinary drift. The other +0.402 is the change of Proxy Bond itself — a different note, at a
+different price, divided by a different conversion factor. Swapping the bond the contract is priced off
+moves the price nearly three times as much as the jump that announces it.
 
 ### The risk changes shape
 
 The more interesting change is the risk:
 
-| | Tick 875 | Tick 878 |
+| | Tick 870 | Tick 878 |
 |---|---|---|
-| Proxy Bond DV01 on 6mm face | 3,373.3 | 3,546.4 |
-| ÷ conversion factor | 3,746.9 | 3,998.2 |
-| **P09 DV01 (short 6mm)** | **−3,746.9** | **−3,998.2** |
-| Largest buckets | 7Y −3,072, 5Y −479 | 7Y −3,208, 10Y −389, 5Y −208 |
+| Proxy Bond DV01 on 6mm face | 3,568.1 | 3,645.6 |
+| ÷ conversion factor | 3,947.0 | 4,110.0 |
+| **P09 DV01 (short 6mm)** | **−3,947.0** | **−4,110.0** |
+| Largest buckets | 7Y −3,426, 5Y −221, 10Y −97 | 7Y −3,302, 10Y −400, 5Y −213 |
 
 CME's rule, futures DV01 = cash DV01 / conversion factor, holds to the last decimal place in both columns,
 because it is what the engine's arithmetic does.
 
-The hedge changed without anyone trading. The old Proxy Bond matures in August 2033, about 6.8 years from
-the Valuation Date, so its risk sat between the 5Y and 7Y Pillars. The new one matures in February 2034,
-about 7.3 years out, so its risk spreads between 7Y and 10Y. A short position that was hedging the 5Y–7Y
-part of the curve is now hedging the 7Y–10Y part, and its DV01 grew by 251 dollars per basis point.
+The hedge changed without anyone trading. The old Proxy Bond matures in November 2033, about 7.1 years
+from the Valuation Date. The new one matures in February 2034, about 7.3 years out — three months further
+on, which sounds like nothing. Watch what it does to the buckets: the 10Y bucket goes from −97 to −400,
+four times the exposure, while the 7Y bucket shrinks. A quarter of a year of extra maturity moved a
+tenth of the Position's risk one Pillar along the curve, and the Position's DV01 grew by 163 dollars per
+basis point.
 
-At the Book level the 7Y bucket moves from +526 to +389 and the 10Y bucket from +15,421 to +15,032. A desk
-watching only the total DV01 (20,028 to 19,776) would see a small drift. The buckets show that something
-structural happened.
+At the Book level the 7Y bucket moves from +1,019 to +1,173 and the 10Y bucket from +22,666 to +22,601. A
+desk watching only the total DV01 (28,778 to 28,933) would see a small drift. The buckets show where it
+came from.
 
 ### Staleness, again
 
-One detail in the futures panel is worth catching. At Tick 880 the panel shows the ZN price as 104.3237,
-which is the Tick-878 price, while the Basis column reads −0.019, its current value. The future has not
-been repriced since the switch, because the Basis has not moved 0.02 points since. That is
+One detail in the futures panel is worth catching. At Tick 882 the panel shows the ZN price as 106.7266,
+which is the Tick-880 price, while the Basis column reads −0.296, its current value. The future has not
+been repriced for two Ticks, because the Basis has moved only 0.005 points in that time, against a
+0.02-point threshold. That is
 [article 5](05-real-time-risk-without-recomputing-everything.md)'s bargain in one row: the displayed price
 lags the market by a bounded amount, and the panel shows you both numbers so you can see the lag.
 
