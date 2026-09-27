@@ -317,9 +317,9 @@ because it is what the engine's arithmetic does.
 The hedge changed without anyone trading. The old Proxy Bond matures in November 2033, about 7.1 years
 from the Valuation Date. The new one matures in February 2034, about 7.3 years out — three months further
 on, which sounds like nothing. Watch what it does to the buckets: the 10Y bucket goes from −97 to −400,
-four times the exposure, while the 7Y bucket shrinks. A quarter of a year of extra maturity moved a
-tenth of the Position's risk one Pillar along the curve, and the Position's DV01 grew by 163 dollars per
-basis point.
+four times the exposure, while the 7Y bucket shrinks by 124. A quarter of a year of extra maturity moved
+about 300 dollars per basis point of this Position's risk one Pillar along the curve, and grew its DV01
+by 163.
 
 At the Book level the 7Y bucket moves from +1,019 to +1,173 and the 10Y bucket from +22,666 to +22,601. A
 desk watching only the total DV01 (28,778 to 28,933) would see a small drift. The buckets show where it

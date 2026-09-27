@@ -7,9 +7,9 @@ A developer joining a bank, an asset manager or a fintech hears "DV01", "the cur
 system, and why such systems are built the way they are, using a complete, working engine you can run
 yourself.
 
-The engine simulates a market anchored to the real US Treasury curve, holds a Book of Treasuries,
-Treasury futures, corporate bonds and interest rate swaps, and reprices it selectively as the market
-moves, streaming risk to a browser.
+The engine simulates a market anchored to the real US Treasury curve and the real euro area curve, holds
+a Book of Treasuries, Treasury futures, corporate bonds, interest rate swaps, FX forwards and swaptions,
+and reprices it selectively as the market moves, streaming risk to a browser.
 
 ## Reading order
 

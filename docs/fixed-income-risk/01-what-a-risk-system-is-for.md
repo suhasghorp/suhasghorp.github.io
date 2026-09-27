@@ -341,7 +341,7 @@ future: value 0, DV01 −3,893. The Book total is **\$33,654,215**.
 The last column is the one this series is about. At Tick 30:
 
 - most rows say *tick 24*, the last Day Rollover, when every Instrument is repriced;
-- two rows are highlighted and say *this tick*: P14, a Cascade Capital bond, and P19, an FX forward;
+- two rows are highlighted and say *this tick*: P14, a Cascade Financial bond, and P19, an FX forward;
 - the strip above the table reads **2 / 20 Instruments** repriced this cycle.
 
 The market moved on every one of the six Ticks since the rollover, yet 18 of the 20 Instruments were

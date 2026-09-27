@@ -265,27 +265,36 @@ Consuming the stream directly and counting what arrives:
 | Measured over the run | |
 |---|---|
 | Ticks simulated | 200 |
-| Repricing cycles | 41 |
-| Tick advance per cycle | 5, every time |
-| Ticks coalesced per cycle | 1 to 5, mean 3.97 |
+| Repricing cycles observed | 40, covering Ticks 6 to 200 |
+| Tick advance per cycle | 5 on 36 of 39; twice 6, once 2 |
+| Ticks coalesced per cycle | 1 to 5, mean 3.98 |
 | **Ticks coalesced in total** | **159 of 200** |
 | Sequence gaps seen by the client | none |
 
-Five Ticks per cycle is exactly what the configuration implies: the simulation produces five a second and
-repricing manages one cycle a second. **The simulation never slowed down**: 200 Ticks of simulated market
-happened on schedule, and the engine priced the newest of every five.
+Five Ticks per cycle is what the configuration implies: the simulation produces five a second and
+repricing manages about one cycle a second. It is *about* rather than exactly, and the two sixes in that
+table are why — a cycle that reprices twenty Instruments is no longer free next to the profile's
+artificial one-second delay, so a slow cycle occasionally lets a sixth Tick through, and the cycle after
+it catches up with a short one. Nothing is lost either way: the total is still 159 coalesced of 200, and
+the client saw no gaps.
+
+**The simulation never slowed down**: 200 Ticks of simulated market happened on schedule, and the engine
+priced the newest Tick of each group.
 
 ![The Book telemetry at Tick 200 under demo-slow](img/11-slow-telemetry.png)
 
-The UI reports it: **ticks coalesced, 159 total**. Two other numbers on that strip are worth comparing with
-[article 5](05-real-time-risk-without-recomputing-everything.md)'s normal run:
+The UI reports it: **ticks coalesced, 159 total**, the strip's running count. The strip's other numbers
+are instantaneous — what one cycle repriced, how stale the inputs are right now — so the comparison with
+[article 5](05-real-time-risk-without-recomputing-everything.md)'s normal run is better made over the
+whole run, counting the same stream:
 
-- **Max Staleness on a Pillar zero rate is 1.32bp of the 2bp threshold**, against 0.89bp in the normal
-  demo. With five Ticks between cycles the market moves further between reprices, so displayed prices lag
-  more, though still within the bound.
-- **Cycles reprice more Instruments.** In the normal demo an average Tick repriced about 4 of 16; under
-  `demo-slow` many cycles reprice all 16, because five Ticks of market movement pushes more factors past
-  their thresholds.
+- **Max Staleness on a Pillar zero rate reaches 1.98bp of the 2bp threshold** over the run, against
+  1.999bp in the normal demo. With five Ticks between cycles the market moves further between reprices,
+  so displayed prices lag more often — and the *bound* is the same bound, because it is a property of
+  the thresholds and not of how fast cycles come.
+- **Cycles reprice far more Instruments.** In the normal demo an average Tick repriced about 6.5 of 20;
+  under `demo-slow` the average cycle reprices **14.3**, and 21 of the 40 cycles reprice 16 or more,
+  because five Ticks of market movement pushes more factors past their thresholds.
 
 That is the trade in its purest form. Coalescing does not lose events and does not delay the market; it
 buys timeliness with Staleness, and the Staleness stays inside the bound that

@@ -327,7 +327,7 @@ The Book panel's top strip is the engine explaining itself. At Tick 30:
   cannot exceed 2bp.
 - The same for Marks (0.36bp of 1bp) and the Systemic Factor (0.67bp of 1bp).
 
-The Book table shows which two: the Cascade Capital corporate bond and the USD/KRW forward are
+The Book table shows which two: the Cascade Financial corporate bond and the USD/KRW forward are
 highlighted and read *this tick*, while every other row still reads *tick 24*, the last
 [Day Rollover](glossary.md#day-rollover).
 
