@@ -280,7 +280,15 @@ Every number and screenshot in the series comes from one reproducible run. The `
 
 - the bundled Treasury curve for 11 September 2026, instead of whatever today's live curve is;
 - the random seed, 42;
-- one simulated hour per Tick, 24 Ticks per simulated day, one Tick per second.
+- **how far the market moves each Tick:** one hour of simulated time, with 24 Ticks to a simulated day, at
+  the end of which the [Valuation Date](glossary.md#valuation-date) moves on;
+- **how fast Ticks arrive:** one a second of real time.
+
+The second of those is playback speed and nothing else: the simulated market has no idea how quickly it is
+being run. So a simulated day goes past in 24 seconds of watching, and Tick 30 — this article's
+screenshot — lands half a minute after startup. Run the same demo with `tick-interval=100ms` and every number
+in this article is identical, ten times sooner. ([Article 11](11-the-runtime.md) is the one place the
+pacing matters, and it changes it deliberately.)
 
 The `stop-at-tick` setting freezes the simulation at an exact Tick so the screen can be read at leisure.
 This article stops at Tick 30:
