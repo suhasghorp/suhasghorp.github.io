@@ -49,6 +49,7 @@ nav:
       - "10. Correlation": fixed-income-risk/10-correlation.md
       - "11. The runtime": fixed-income-risk/11-the-runtime.md
       - "12. Two currencies, two kinds of forward": fixed-income-risk/12-two-currencies.md
+      - "13. Options on a swap": fixed-income-risk/13-swaptions.md
   - Glossary: fixed-income-risk/glossary.md
 
 markdown_extensions:

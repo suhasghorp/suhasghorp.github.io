@@ -591,6 +591,6 @@ Textbooks:
 ## Next
 
 The Book now prices in two currencies, and the last Positions in it are the two that are not linear at all.
-Article 13 is about options on swaps: a quoted volatility surface the engine cannot
+[Article 13](13-swaptions.md) is about options on swaps: a quoted volatility surface the engine cannot
 derive from anything it already has, the Bachelier model the market quotes in, Vega and Gamma, and an
 exercise decision made once and never revisited.

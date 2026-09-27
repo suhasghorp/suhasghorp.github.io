@@ -391,4 +391,4 @@ came out of it. Clone it, run it, and change a threshold to see what breaks.
 Two articles follow it, and both are about what happens when the Book stops being a single-currency,
 linear thing:
 [article 12](12-two-currencies.md) adds a second currency, a forward derived from two curves and one that
-has to be quoted, and article 13 adds options on swaps.
+has to be quoted, and [article 13](13-swaptions.md) adds options on swaps.

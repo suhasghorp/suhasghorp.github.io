@@ -25,6 +25,7 @@ and reprices it selectively as the market moves, streaming risk to a browser.
 10. [Correlation](10-correlation.md): Flight to quality, and generating correlated shocks with a Cholesky factor.
 11. [The runtime](11-the-runtime.md): Threads, a latest-wins hand-off, coalescing, a worker pool, and streaming risk to the browser.
 12. [Two currencies, two kinds of forward](12-two-currencies.md): Covered interest parity, quoted Forward Points, FX Fixings, and why currency exposures never net.
+13. [Options on a swap](13-swaptions.md): Bachelier, a quoted volatility surface, Vega and Gamma, and a decision made once.
 
 Each article stands alone, and every term links to the [glossary](glossary.md).
 
