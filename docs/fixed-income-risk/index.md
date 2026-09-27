@@ -24,6 +24,7 @@ and reprices it selectively as the market moves, streaming risk to a browser.
 9. [Interest rate swaps](09-interest-rate-swaps.md): Fixed vs floating, Fixings, the par trick, and single-curve vs OIS.
 10. [Correlation](10-correlation.md): Flight to quality, and generating correlated shocks with a Cholesky factor.
 11. [The runtime](11-the-runtime.md): Threads, a latest-wins hand-off, coalescing, a worker pool, and streaming risk to the browser.
+12. [Two currencies, two kinds of forward](12-two-currencies.md): Covered interest parity, quoted Forward Points, FX Fixings, and why currency exposures never net.
 
 Each article stands alone, and every term links to the [glossary](glossary.md).
 

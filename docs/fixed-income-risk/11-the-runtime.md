@@ -372,7 +372,7 @@ Textbooks:
 
 ## Next
 
-That is the series. Eleven articles ago the question was what a risk system is for; the answer has turned
+That is the engine. Eleven articles ago the question was what a risk system is for; the answer has turned
 out to be a chain of quite specific engineering decisions:
 
 - a curve **bootstrapped** from published par yields, interpolated so its forwards stay sane
@@ -392,3 +392,8 @@ out to be a chain of quite specific engineering decisions:
 
 The engine is on GitHub, the demo is reproducible from a single seed, and every number in these articles
 came out of it. Clone it, run it, and change a threshold to see what breaks.
+
+Two articles follow it, and both are about what happens when the Book stops being a single-currency,
+linear thing:
+[article 12](12-two-currencies.md) adds a second currency, a forward derived from two curves and one that
+has to be quoted, and article 13 adds options on swaps.
