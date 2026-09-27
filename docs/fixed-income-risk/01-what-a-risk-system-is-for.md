@@ -128,9 +128,29 @@ one input moves by a small, fixed amount, with everything else held still.
 The most important sensitivity in fixed income is [DV01](glossary.md#dv01), the "dollar value of a
 basis point". It is the change in value when interest rates move by one basis point (0.01%). A long bond
 loses value when rates rise, so a desk long 10 million of a two-year note has a DV01 of roughly
-\$1,900: every basis point up in rates costs about that much. Article 4 covers DV01 and its more useful
-cousin, [Bucketed DV01](glossary.md#bucketed-dv01), which splits the exposure across points on the
-curve. Article 7 covers [CS01](glossary.md#cs01), the same idea for credit spreads.
+\$1,900: every basis point up in rates costs about that much.
+
+Where does \$1,900 come from? Multiply three things — the notional, how long the money is tied up, and the
+size of the move:
+
+$$
+10{,}000{,}000 \;\times\; 1.9 \;\times\; 0.0001 \;=\; 1{,}900
+$$
+
+The 1.9 is the only part that takes any thought. It is a little *less* than the two years to maturity,
+because the coupons come back before the principal does, and it has a textbook name — modified duration —
+that this series otherwise leaves alone. Everything else is arithmetic: a basis point is 0.0001, and the
+notional is the notional.
+
+That is a rule of thumb, and the engine does not use it. It measures DV01 by moving the curve and
+repricing, which is the formula box below. The two agree: the Book in the screenshot further down holds
+exactly this Position — P01, the 4.125% note of August 2028 — and the engine makes its DV01 **+1,897** at
+Tick 30, against the \$1,900 the back of an envelope gives. Keep the envelope: it is how you notice when a
+risk system is wrong by a factor of ten.
+
+Article 4 covers DV01 and its more useful cousin, [Bucketed DV01](glossary.md#bucketed-dv01), which splits
+the exposure across points on the curve. Article 7 covers [CS01](glossary.md#cs01), the same idea for
+credit spreads.
 
 Sensitivities also add up. The Book's DV01 is the sum of its Positions' DV01s. That is why a single number
 at the top of a risk screen can summarise thousands of Positions, and why a short Position can hedge a
