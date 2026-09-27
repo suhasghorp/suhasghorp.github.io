@@ -1,11 +1,6 @@
 # 8. When credit breaks
 
-!!! warning "Draft"
-
-    This article is a draft under review and may change.
-
 *Credit Events, Rating Migrations, and Dependencies that change while the engine runs.*
-
 
 **Previously:** [article 7](07-credit-and-the-missing-tape.md) showed how a corporate bond is priced when
 almost nothing is observable: one [Mark](glossary.md#mark) per issuer, reset on a

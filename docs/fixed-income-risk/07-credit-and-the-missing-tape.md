@@ -1,11 +1,6 @@
 # 7. Credit and the missing tape
 
-!!! warning "Draft"
-
-    This article is a draft under review and may change.
-
 *Spreads, Latent Spreads vs Marks, Prints and Quotes, Matrix Pricing and CS01.*
-
 
 **Previously:** the series has priced Treasuries and futures off one curve
 ([articles 2](02-the-yield-curve.md)–[4](04-pricing-a-bond-and-measuring-its-risk.md)), repriced them

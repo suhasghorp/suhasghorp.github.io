@@ -1,11 +1,6 @@
 # 11. The runtime
 
-!!! warning "Draft"
-
-    This article is a draft under review and may change.
-
 *Threads, a latest-wins hand-off, coalescing, a worker pool, and streaming risk to the browser.*
-
 
 **Previously:** ten articles have built a market and priced a [Book](glossary.md#book) against it. Every
 one of them has quietly assumed something this article has to deliver: that the risk on screen keeps up

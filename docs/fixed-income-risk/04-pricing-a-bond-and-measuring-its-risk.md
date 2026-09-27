@@ -1,11 +1,6 @@
 # 4. Pricing a bond and measuring its risk
 
-!!! warning "Draft"
-
-    This article is a draft under review and may change.
-
 *Clean and dirty prices, DV01, Bucketed DV01, and rolling risk up across a Book.*
-
 
 **Previously:** [article 2](02-the-yield-curve.md) built a discount curve from published par yields, and
 [article 3](03-moving-the-curve-through-time.md) set it moving: one short rate, a closed-form curve on

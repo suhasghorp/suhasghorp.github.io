@@ -1,11 +1,6 @@
 # 3. Moving the curve through time
 
-!!! warning "Draft"
-
-    This article is a draft under review and may change.
-
 *Hull-White, simulated time, and why the Valuation Date moves only at Day Rollover.*
-
 
 **Previously:** [article 2](02-the-yield-curve.md) built the engine's starting curve from the fourteen par
 yields the US Treasury published for 11 September 2026: a discount factor, a zero rate and a forward rate

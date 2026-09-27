@@ -1,11 +1,6 @@
 # 6. Treasury futures
 
-!!! warning "Draft"
-
-    This article is a draft under review and may change.
-
 *The cheapest-to-deliver, conversion factors, the Basis, and why a future carries risk but no value.*
-
 
 **Previously:** [article 5](05-real-time-risk-without-recomputing-everything.md) showed the engine repricing
 only what has moved past a [Materiality Threshold](glossary.md#materiality-threshold), and promised that

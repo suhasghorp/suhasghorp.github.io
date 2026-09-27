@@ -1,11 +1,6 @@
 # 2. The yield curve
 
-!!! warning "Draft"
-
-    This article is a draft under review and may change.
-
 *From published par yields to zero rates and discount factors: building today's real Treasury curve.*
-
 
 **Previously:** [article 1](01-what-a-risk-system-is-for.md) set out what a risk system is for: to say, at
 any moment, how the value of a [Book](glossary.md#book) changes when the market moves. It showed that

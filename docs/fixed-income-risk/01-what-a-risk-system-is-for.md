@@ -1,11 +1,6 @@
 # 1. What a risk system is for
 
-!!! warning "Draft"
-
-    This article is a draft under review and may change.
-
 *What a fixed income desk holds, why it needs continuous risk, and a tour of the running engine.*
-
 
 **Previously:** nothing. This is the first article in the series. It sets out what a fixed income risk
 system is for, introduces the engine that the other ten articles take apart, and gives a map of the

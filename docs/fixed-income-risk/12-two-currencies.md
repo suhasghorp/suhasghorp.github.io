@@ -1,11 +1,6 @@
 # 12. Two currencies, two kinds of forward
 
-!!! warning "Draft"
-
-    This article is a draft under review and may change.
-
 *Covered interest parity, quoted Forward Points, FX Fixings, and why currency exposures never net.*
-
 
 **Previously:** eleven articles priced a Book in one currency, and the glossary has been quietly promising
 since article 1 that there is a [Reporting Currency](glossary.md#reporting-currency) and that not

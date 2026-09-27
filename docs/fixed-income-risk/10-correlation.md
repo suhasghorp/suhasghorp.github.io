@@ -1,11 +1,6 @@
 # 10. Correlation
 
-!!! warning "Draft"
-
-    This article is a draft under review and may change.
-
 *Flight to quality, and generating correlated shocks with a Cholesky factor.*
-
 
 **Previously:** the Book now holds every Instrument type the series covers, and each brought its own
 [Risk Factors](glossary.md#risk-factor): curve [Pillars](glossary.md#pillar), a futures

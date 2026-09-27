@@ -1,11 +1,6 @@
 # 5. Real-time risk without recomputing everything
 
-!!! warning "Draft"
-
-    This article is a draft under review and may change.
-
 *Risk Factors, Dependencies, Materiality Thresholds and Staleness: the central engineering problem.*
-
 
 **Previously:** [article 4](04-pricing-a-bond-and-measuring-its-risk.md) priced a bond and measured its
 [DV01](glossary.md#dv01) and [Bucketed DV01](glossary.md#bucketed-dv01) by bumping the curve and repricing.

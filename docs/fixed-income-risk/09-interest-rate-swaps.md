@@ -1,11 +1,6 @@
 # 9. Interest rate swaps
 
-!!! warning "Draft"
-
-    This article is a draft under review and may change.
-
 *Fixed vs floating, Fixings, the par trick, and single-curve vs OIS.*
-
 
 **Previously:** the Book's other Instruments are all priced from a curve and, for corporates, a
 [Mark](glossary.md#mark). Swaps are the last Instrument type, and the only one whose cash flows are not
